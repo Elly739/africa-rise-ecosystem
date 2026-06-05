@@ -13,7 +13,7 @@ const dataQuery = queryOptions({
   },
 });
 
-export const Route = createFileRoute("/courses")({
+export const Route = createFileRoute("/courses/")({
   head: () => ({
     meta: [
       { title: "Courses · SkillBridge Africa" },
