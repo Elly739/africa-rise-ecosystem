@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["ai_kind"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["ai_kind"]
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["ai_kind"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certificates: {
         Row: {
           code: string
@@ -86,6 +145,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cvs: {
+        Row: {
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      discussion_replies: {
+        Row: {
+          body: string
+          created_at: string
+          discussion_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          discussion_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          discussion_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      discussions: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          title: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          title: string
+          topic?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          title?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       enrollments: {
         Row: {
@@ -183,6 +314,48 @@ export type Database = {
           },
         ]
       }
+      opportunities: {
+        Row: {
+          apply_url: string | null
+          created_at: string
+          deadline: string | null
+          description: string
+          id: string
+          location: string | null
+          organization: string
+          remote: boolean
+          tags: string[]
+          title: string
+          type: Database["public"]["Enums"]["opportunity_type"]
+        }
+        Insert: {
+          apply_url?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          location?: string | null
+          organization: string
+          remote?: boolean
+          tags?: string[]
+          title: string
+          type: Database["public"]["Enums"]["opportunity_type"]
+        }
+        Update: {
+          apply_url?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          location?: string | null
+          organization?: string
+          remote?: boolean
+          tags?: string[]
+          title?: string
+          type?: Database["public"]["Enums"]["opportunity_type"]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -210,6 +383,72 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      project_likes: {
+        Row: {
+          created_at: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          demo_url: string | null
+          description: string
+          id: string
+          repo_url: string | null
+          slug: string
+          status: Database["public"]["Enums"]["project_status"]
+          summary: string
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          id?: string
+          repo_url?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["project_status"]
+          summary?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          id?: string
+          repo_url?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["project_status"]
+          summary?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -377,8 +616,11 @@ export type Database = {
       }
     }
     Enums: {
+      ai_kind: "mentor" | "advisor"
       app_role: "admin" | "student"
       course_level: "fundamental" | "intermediate" | "advanced"
+      opportunity_type: "internship" | "job" | "scholarship"
+      project_status: "idea" | "building" | "launched"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -506,8 +748,11 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ai_kind: ["mentor", "advisor"],
       app_role: ["admin", "student"],
       course_level: ["fundamental", "intermediate", "advanced"],
+      opportunity_type: ["internship", "job", "scholarship"],
+      project_status: ["idea", "building", "launched"],
     },
   },
 } as const
