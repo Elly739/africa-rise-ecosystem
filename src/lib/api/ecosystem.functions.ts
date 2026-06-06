@@ -29,7 +29,7 @@ export const saveMyCV = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
       .from("cvs")
-      .upsert({ user_id: context.userId, data: data.data, updated_at: new Date().toISOString() });
+      .upsert({ user_id: context.userId, data: data.data as never, updated_at: new Date().toISOString() });
     if (error) throw error;
     return { ok: true };
   });

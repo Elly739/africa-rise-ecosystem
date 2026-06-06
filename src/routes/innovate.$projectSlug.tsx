@@ -13,14 +13,17 @@ const projectQuery = (slug: string) => queryOptions({
 });
 
 export const Route = createFileRoute("/innovate/$projectSlug")({
-  head: ({ loaderData }) => ({
-    meta: loaderData?.project ? [
-      { title: `${loaderData.project.title} — SkillBridge Innovation Hub` },
-      { name: "description", content: loaderData.project.summary },
-      { property: "og:title", content: loaderData.project.title },
-      { property: "og:description", content: loaderData.project.summary },
-    ] : [{ title: "Project — SkillBridge Africa" }],
-  }),
+  head: ({ loaderData }) => {
+    const p = (loaderData as { project?: { title: string; summary: string } } | undefined)?.project;
+    return {
+      meta: p ? [
+        { title: `${p.title} — SkillBridge Innovation Hub` },
+        { name: "description", content: p.summary },
+        { property: "og:title", content: p.title },
+        { property: "og:description", content: p.summary },
+      ] : [{ title: "Project — SkillBridge Africa" }],
+    };
+  },
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(projectQuery(params.projectSlug));
     if (!data) throw notFound();
