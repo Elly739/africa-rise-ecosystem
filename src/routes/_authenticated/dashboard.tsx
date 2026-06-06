@@ -25,6 +25,22 @@ function Dashboard() {
           <p className="text-brand-navy/60">Keep your momentum — your future self will thank you.</p>
         </header>
 
+        {/* Ecosystem quick-jump */}
+        <section className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {[
+            { label: "Courses", to: "/courses" as const, icon: "📘" },
+            { label: "Careers", to: "/careers" as const, icon: "🚀" },
+            { label: "Innovate", to: "/innovate" as const, icon: "🧑‍💻" },
+            { label: "Community", to: "/community" as const, icon: "🌍" },
+            { label: "AI Mentor", to: "/mentor" as const, icon: "🤖" },
+          ].map((m) => (
+            <Link key={m.label} to={m.to} className="bg-white border border-brand-navy/5 rounded-2xl p-4 hover:shadow-md transition-shadow text-center">
+              <div className="text-2xl mb-1">{m.icon}</div>
+              <div className="text-xs font-bold">{m.label}</div>
+            </Link>
+          ))}
+        </section>
+
         {isLoading && <p className="text-brand-navy/60">Loading…</p>}
 
         {data && (

@@ -21,11 +21,12 @@ export function SiteNav() {
           <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
           <span className="font-display text-lg font-bold tracking-tight">SkillBridge<span className="text-brand-orange">.</span></span>
         </Link>
-        <div className="hidden md:flex gap-8 font-medium text-sm">
-          <Link to="/courses" className="text-brand-navy/60 hover:text-brand-navy transition-colors">Learn</Link>
-          <span className="text-brand-navy/30 cursor-not-allowed">Build</span>
-          <span className="text-brand-navy/30 cursor-not-allowed">Connect</span>
-          <span className="text-brand-navy/30 cursor-not-allowed">Launch</span>
+        <div className="hidden md:flex gap-6 font-medium text-sm">
+          <Link to="/courses" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Learn</Link>
+          <Link to="/careers" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Careers</Link>
+          <Link to="/innovate" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Innovate</Link>
+          <Link to="/community" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Community</Link>
+          {signedIn && <Link to="/mentor" className="text-brand-mint hover:text-brand-mint/80 font-semibold">AI Mentor</Link>}
         </div>
         {signedIn ? (
           <div className="flex items-center gap-2">

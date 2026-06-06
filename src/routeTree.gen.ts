@@ -9,16 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as InnovateRouteImport } from './routes/innovate'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$projectSlug'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
+import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
+import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
 import { Route as AuthenticatedCertificatesRouteImport } from './routes/_authenticated/certificates'
+import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticated/advisor'
 import { Route as AuthenticatedQuizzesQuizIdRouteImport } from './routes/_authenticated/quizzes.$quizId'
 import { Route as AuthenticatedLessonsLessonIdRouteImport } from './routes/_authenticated/lessons.$lessonId'
 
+const InnovateRoute = InnovateRouteImport.update({
+  id: '/innovate',
+  path: '/innovate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -38,14 +61,34 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InnovateProjectSlugRoute = InnovateProjectSlugRouteImport.update({
+  id: '/$projectSlug',
+  path: '/$projectSlug',
+  getParentRoute: () => InnovateRoute,
+} as any)
 const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
   path: '/courses/$courseId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityDiscussionIdRoute = CommunityDiscussionIdRouteImport.update({
+  id: '/$discussionId',
+  path: '/$discussionId',
+  getParentRoute: () => CommunityRoute,
+} as any)
+const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCvRoute = AuthenticatedCvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCertificatesRoute =
@@ -54,6 +97,11 @@ const AuthenticatedCertificatesRoute =
     path: '/certificates',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdvisorRoute = AuthenticatedAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedQuizzesQuizIdRoute =
   AuthenticatedQuizzesQuizIdRouteImport.update({
     id: '/quizzes/$quizId',
@@ -70,9 +118,17 @@ const AuthenticatedLessonsLessonIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/community': typeof CommunityRouteWithChildren
+  '/innovate': typeof InnovateRouteWithChildren
+  '/advisor': typeof AuthenticatedAdvisorRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
+  '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/mentor': typeof AuthenticatedMentorRoute
+  '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/courses/': typeof CoursesIndexRoute
   '/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
   '/quizzes/$quizId': typeof AuthenticatedQuizzesQuizIdRoute
@@ -80,9 +136,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/community': typeof CommunityRouteWithChildren
+  '/innovate': typeof InnovateRouteWithChildren
+  '/advisor': typeof AuthenticatedAdvisorRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
+  '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/mentor': typeof AuthenticatedMentorRoute
+  '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/courses': typeof CoursesIndexRoute
   '/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
   '/quizzes/$quizId': typeof AuthenticatedQuizzesQuizIdRoute
@@ -92,9 +156,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/community': typeof CommunityRouteWithChildren
+  '/innovate': typeof InnovateRouteWithChildren
+  '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
   '/_authenticated/certificates': typeof AuthenticatedCertificatesRoute
+  '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/courses/': typeof CoursesIndexRoute
   '/_authenticated/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
   '/_authenticated/quizzes/$quizId': typeof AuthenticatedQuizzesQuizIdRoute
@@ -104,9 +176,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/careers'
+    | '/community'
+    | '/innovate'
+    | '/advisor'
     | '/certificates'
+    | '/cv'
     | '/dashboard'
+    | '/mentor'
+    | '/community/$discussionId'
     | '/courses/$courseId'
+    | '/innovate/$projectSlug'
     | '/courses/'
     | '/lessons/$lessonId'
     | '/quizzes/$quizId'
@@ -114,9 +194,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/careers'
+    | '/community'
+    | '/innovate'
+    | '/advisor'
     | '/certificates'
+    | '/cv'
     | '/dashboard'
+    | '/mentor'
+    | '/community/$discussionId'
     | '/courses/$courseId'
+    | '/innovate/$projectSlug'
     | '/courses'
     | '/lessons/$lessonId'
     | '/quizzes/$quizId'
@@ -125,9 +213,17 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/careers'
+    | '/community'
+    | '/innovate'
+    | '/_authenticated/advisor'
     | '/_authenticated/certificates'
+    | '/_authenticated/cv'
     | '/_authenticated/dashboard'
+    | '/_authenticated/mentor'
+    | '/community/$discussionId'
     | '/courses/$courseId'
+    | '/innovate/$projectSlug'
     | '/courses/'
     | '/_authenticated/lessons/$lessonId'
     | '/_authenticated/quizzes/$quizId'
@@ -137,12 +233,36 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CareersRoute: typeof CareersRoute
+  CommunityRoute: typeof CommunityRouteWithChildren
+  InnovateRoute: typeof InnovateRouteWithChildren
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/innovate': {
+      id: '/innovate'
+      path: '/innovate'
+      fullPath: '/innovate'
+      preLoaderRoute: typeof InnovateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -171,12 +291,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/innovate/$projectSlug': {
+      id: '/innovate/$projectSlug'
+      path: '/$projectSlug'
+      fullPath: '/innovate/$projectSlug'
+      preLoaderRoute: typeof InnovateProjectSlugRouteImport
+      parentRoute: typeof InnovateRoute
+    }
     '/courses/$courseId': {
       id: '/courses/$courseId'
       path: '/courses/$courseId'
       fullPath: '/courses/$courseId'
       preLoaderRoute: typeof CoursesCourseIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/community/$discussionId': {
+      id: '/community/$discussionId'
+      path: '/$discussionId'
+      fullPath: '/community/$discussionId'
+      preLoaderRoute: typeof CommunityDiscussionIdRouteImport
+      parentRoute: typeof CommunityRoute
+    }
+    '/_authenticated/mentor': {
+      id: '/_authenticated/mentor'
+      path: '/mentor'
+      fullPath: '/mentor'
+      preLoaderRoute: typeof AuthenticatedMentorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -185,11 +326,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/cv': {
+      id: '/_authenticated/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof AuthenticatedCvRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/certificates': {
       id: '/_authenticated/certificates'
       path: '/certificates'
       fullPath: '/certificates'
       preLoaderRoute: typeof AuthenticatedCertificatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advisor': {
+      id: '/_authenticated/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AuthenticatedAdvisorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/quizzes/$quizId': {
@@ -210,15 +365,21 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
   AuthenticatedCertificatesRoute: typeof AuthenticatedCertificatesRoute
+  AuthenticatedCvRoute: typeof AuthenticatedCvRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
   AuthenticatedLessonsLessonIdRoute: typeof AuthenticatedLessonsLessonIdRoute
   AuthenticatedQuizzesQuizIdRoute: typeof AuthenticatedQuizzesQuizIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
   AuthenticatedCertificatesRoute: AuthenticatedCertificatesRoute,
+  AuthenticatedCvRoute: AuthenticatedCvRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMentorRoute: AuthenticatedMentorRoute,
   AuthenticatedLessonsLessonIdRoute: AuthenticatedLessonsLessonIdRoute,
   AuthenticatedQuizzesQuizIdRoute: AuthenticatedQuizzesQuizIdRoute,
 }
@@ -226,10 +387,37 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CommunityRouteChildren {
+  CommunityDiscussionIdRoute: typeof CommunityDiscussionIdRoute
+}
+
+const CommunityRouteChildren: CommunityRouteChildren = {
+  CommunityDiscussionIdRoute: CommunityDiscussionIdRoute,
+}
+
+const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
+  CommunityRouteChildren,
+)
+
+interface InnovateRouteChildren {
+  InnovateProjectSlugRoute: typeof InnovateProjectSlugRoute
+}
+
+const InnovateRouteChildren: InnovateRouteChildren = {
+  InnovateProjectSlugRoute: InnovateProjectSlugRoute,
+}
+
+const InnovateRouteWithChildren = InnovateRoute._addFileChildren(
+  InnovateRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CareersRoute: CareersRoute,
+  CommunityRoute: CommunityRouteWithChildren,
+  InnovateRoute: InnovateRouteWithChildren,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
 }
