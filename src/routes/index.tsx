@@ -148,27 +148,26 @@ function Landing() {
       {/* Ecosystem */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 className="font-display text-4xl font-bold mb-6">A complete growth journey</h2>
+          <h2 className="font-display text-4xl font-bold mb-6">The full growth loop</h2>
           <p className="text-brand-navy/60">
-            Beyond learning, we're building the infrastructure to build, connect with mentors, and launch your career — all in one ecosystem.
+            Learn → Build → Connect → Apply → Innovate → Repeat. Every layer of the ecosystem is live.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
           {[
-            { icon: "📖", label: "Learn", desc: "Expert-led courses and interactive quizzes.", active: true },
-            { icon: "🛠️", label: "Build", desc: "Sandbox environments for real-world projects.", active: false },
-            { icon: "🤝", label: "Connect", desc: "Peer-to-peer mentoring and networking.", active: false },
-            { icon: "🚀", label: "Launch", desc: "Job placement and venture incubation.", active: false },
+            { icon: "📘", label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, color: "bg-brand-mint/20 text-brand-mint" },
+            { icon: "🚀", label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, color: "bg-brand-orange/20 text-brand-orange" },
+            { icon: "🧑‍💻", label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, color: "bg-brand-mint/20 text-brand-mint" },
+            { icon: "🌍", label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, color: "bg-brand-navy/10 text-brand-navy" },
+            { icon: "🤖", label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, color: "bg-brand-orange/20 text-brand-orange" },
           ].map((p) => (
-            <div key={p.label} className={`text-center space-y-4 ${p.active ? "" : "opacity-40"}`}>
-              <div className={`size-16 bg-white ${p.active ? "border-2 border-brand-clay" : "border border-brand-clay"} rounded-2xl flex items-center justify-center mx-auto text-2xl`}>
-                {p.icon}
-              </div>
-              <h4 className="font-display font-bold text-lg">{p.label}</h4>
-              <p className="text-xs text-brand-navy/50 max-w-[180px] mx-auto">{p.desc}</p>
-              {!p.active && <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-brand-navy/40">Roadmap</span>}
-            </div>
+            <Link key={p.label} to={p.to} {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})} className="group bg-white border border-brand-clay rounded-2xl p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <div className={`size-12 rounded-xl flex items-center justify-center text-xl mb-4 ${p.color}`}>{p.icon}</div>
+              <h4 className="font-display font-bold">{p.label}</h4>
+              <p className="text-xs text-brand-navy/55 mt-2 leading-relaxed">{p.desc}</p>
+              <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange opacity-0 group-hover:opacity-100 transition-opacity">Open →</span>
+            </Link>
           ))}
         </div>
       </section>
