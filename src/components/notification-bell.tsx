@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -79,9 +79,9 @@ export function NotificationBell() {
                   return (
                     <li key={n.id}>
                       {n.link ? (
-                        <Link to={n.link} onClick={() => { markFn({ data: { id: n.id } }); setOpen(false); }}>
+                        <a href={n.link} onClick={() => { markFn({ data: { id: n.id } }); setOpen(false); }}>
                           {Inner}
-                        </Link>
+                        </a>
                       ) : Inner}
                     </li>
                   );
