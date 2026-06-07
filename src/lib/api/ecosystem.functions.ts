@@ -115,7 +115,33 @@ export const listDiscussions = createServerFn({ method: "GET" }).handler(async (
     .order("created_at", { ascending: false })
     .limit(50);
   if (error) throw error;
-  return data ?? [];
+  const rows = data ?? [];
+  if (rows.length === 0) return [];
+  const ids = rows.map((r) => r.id);
+  const userIds = Array.from(new Set(rows.map((r) => r.user_id)));
+  const [{ data: replies }, { data: profiles }] = await Promise.all([
+    supabaseAdmin.from("discussion_replies").select("discussion_id,created_at,user_id").in("discussion_id", ids),
+    supabaseAdmin.from("profiles").select("id,display_name,avatar_url").in("id", userIds),
+  ]);
+  const replyMap = new Map<string, { count: number; last: string; participants: Set<string> }>();
+  for (const r of replies ?? []) {
+    const e = replyMap.get(r.discussion_id) ?? { count: 0, last: "", participants: new Set<string>() };
+    e.count++;
+    if (r.created_at > e.last) e.last = r.created_at;
+    e.participants.add(r.user_id);
+    replyMap.set(r.discussion_id, e);
+  }
+  const profMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+  return rows.map((r) => {
+    const re = replyMap.get(r.id);
+    return {
+      ...r,
+      author: profMap.get(r.user_id) ?? null,
+      reply_count: re?.count ?? 0,
+      last_activity: re?.last || r.created_at,
+      participants: re ? re.participants.size + 1 : 1,
+    };
+  });
 });
 
 export const getDiscussion = createServerFn({ method: "GET" })
@@ -126,7 +152,13 @@ export const getDiscussion = createServerFn({ method: "GET" })
       supabaseAdmin.from("discussion_replies").select("*").eq("discussion_id", data.id).order("created_at"),
     ]);
     if (!d) return null;
-    return { discussion: d, replies: replies ?? [] };
+    const userIds = Array.from(new Set([d.user_id, ...(replies ?? []).map((r) => r.user_id)]));
+    const { data: profiles } = await supabaseAdmin.from("profiles").select("id,display_name,avatar_url").in("id", userIds);
+    const profMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+    return {
+      discussion: { ...d, author: profMap.get(d.user_id) ?? null },
+      replies: (replies ?? []).map((r) => ({ ...r, author: profMap.get(r.user_id) ?? null })),
+    };
   });
 
 export const createDiscussion = createServerFn({ method: "POST" })
