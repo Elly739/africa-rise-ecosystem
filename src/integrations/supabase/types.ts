@@ -73,6 +73,44 @@ export type Database = {
           },
         ]
       }
+      applications: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          opportunity_id: string
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opportunity_id: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opportunity_id?: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certificates: {
         Row: {
           code: string
@@ -313,6 +351,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
       }
       opportunities: {
         Row: {
@@ -618,7 +689,19 @@ export type Database = {
     Enums: {
       ai_kind: "mentor" | "advisor"
       app_role: "admin" | "student"
+      application_status:
+        | "submitted"
+        | "under_review"
+        | "interview"
+        | "offer"
+        | "rejected"
+        | "withdrawn"
       course_level: "fundamental" | "intermediate" | "advanced"
+      notification_type:
+        | "project_like"
+        | "discussion_reply"
+        | "application_status"
+        | "system"
       opportunity_type: "internship" | "job" | "scholarship"
       project_status: "idea" | "building" | "launched"
     }
@@ -750,7 +833,21 @@ export const Constants = {
     Enums: {
       ai_kind: ["mentor", "advisor"],
       app_role: ["admin", "student"],
+      application_status: [
+        "submitted",
+        "under_review",
+        "interview",
+        "offer",
+        "rejected",
+        "withdrawn",
+      ],
       course_level: ["fundamental", "intermediate", "advanced"],
+      notification_type: [
+        "project_like",
+        "discussion_reply",
+        "application_status",
+        "system",
+      ],
       opportunity_type: ["internship", "job", "scholarship"],
       project_status: ["idea", "building", "launched"],
     },
