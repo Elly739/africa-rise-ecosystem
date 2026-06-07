@@ -1,9 +1,18 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { NotificationBell } from "@/components/notification-bell";
+
+const navLinks = [
+  { to: "/courses" as const, label: "Learn" },
+  { to: "/careers" as const, label: "Careers" },
+  { to: "/innovate" as const, label: "Innovate" },
+  { to: "/community" as const, label: "Community" },
+];
 
 export function SiteNav() {
   const [signedIn, setSignedIn] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,33 +25,86 @@ export function SiteNav() {
 
   return (
     <nav className="sticky top-0 z-40 bg-brand-bg/85 backdrop-blur-md border-b border-brand-navy/5">
-      <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <Link to="/" className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto gap-3">
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
           <span className="font-display text-lg font-bold tracking-tight">SkillBridge<span className="text-brand-orange">.</span></span>
         </Link>
+
         <div className="hidden md:flex gap-6 font-medium text-sm">
-          <Link to="/courses" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Learn</Link>
-          <Link to="/careers" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Careers</Link>
-          <Link to="/innovate" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Innovate</Link>
-          <Link to="/community" className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>Community</Link>
+          {navLinks.map((l) => (
+            <Link key={l.to} to={l.to} className="text-brand-navy/60 hover:text-brand-navy" activeProps={{ className: "text-brand-navy" }}>{l.label}</Link>
+          ))}
           {signedIn && <Link to="/mentor" className="text-brand-mint hover:text-brand-mint/80 font-semibold">AI Mentor</Link>}
         </div>
-        {signedIn ? (
-          <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="hidden sm:inline-flex px-4 py-2 text-sm font-semibold text-brand-navy">Dashboard</Link>
-            <button
-              onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
-              className="px-5 py-2.5 bg-brand-navy text-white rounded-full text-sm font-semibold hover:bg-brand-navy/90"
-            >Sign out</button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link to="/auth" search={{ mode: "signin" }} className="hidden sm:inline-flex px-4 py-2 text-sm font-semibold text-brand-navy">Sign in</Link>
-            <Link to="/auth" search={{ mode: "signup" }} className="px-5 py-2.5 bg-brand-navy text-white rounded-full text-sm font-semibold hover:bg-brand-navy/90">Get Started</Link>
-          </div>
-        )}
+
+        <div className="flex items-center gap-1 sm:gap-2">
+          {signedIn ? (
+            <>
+              <NotificationBell />
+              <Link to="/dashboard" className="hidden sm:inline-flex px-3 py-2 text-sm font-semibold text-brand-navy">Dashboard</Link>
+              <button
+                onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
+                className="hidden sm:inline-flex px-4 py-2 bg-brand-navy text-white rounded-full text-sm font-semibold hover:bg-brand-navy/90"
+              >Sign out</button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth" search={{ mode: "signin" }} className="hidden sm:inline-flex px-3 py-2 text-sm font-semibold text-brand-navy">Sign in</Link>
+              <Link to="/auth" search={{ mode: "signup" }} className="hidden sm:inline-flex px-4 py-2 bg-brand-navy text-white rounded-full text-sm font-semibold hover:bg-brand-navy/90">Get Started</Link>
+            </>
+          )}
+
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="md:hidden size-10 flex items-center justify-center rounded-full hover:bg-brand-clay"
+            aria-label="Menu"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile drawer */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-brand-navy/40" onClick={() => setMenuOpen(false)} />
+          <div className="absolute right-0 top-0 h-full w-72 max-w-[85vw] bg-brand-bg shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-brand-navy/5">
+              <span className="font-display font-bold">Menu</span>
+              <button onClick={() => setMenuOpen(false)} className="size-9 flex items-center justify-center rounded-full hover:bg-brand-clay" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div className="flex flex-col p-5 gap-1">
+              {navLinks.map((l) => (
+                <Link key={l.to} to={l.to} onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">{l.label}</Link>
+              ))}
+              {signedIn && (
+                <>
+                  <Link to="/mentor" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold text-brand-mint hover:bg-brand-clay">AI Mentor</Link>
+                  <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Dashboard</Link>
+                  <Link to="/cv" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My CV</Link>
+                  <Link to="/certificates" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Certificates</Link>
+                </>
+              )}
+            </div>
+            <div className="mt-auto p-5 border-t border-brand-navy/5">
+              {signedIn ? (
+                <button
+                  onClick={async () => { await supabase.auth.signOut(); setMenuOpen(false); navigate({ to: "/" }); }}
+                  className="w-full px-4 py-3 bg-brand-navy text-white rounded-full font-semibold"
+                >Sign out</button>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Link to="/auth" search={{ mode: "signin" }} onClick={() => setMenuOpen(false)} className="px-4 py-3 text-center rounded-full font-semibold border border-brand-navy/15">Sign in</Link>
+                  <Link to="/auth" search={{ mode: "signup" }} onClick={() => setMenuOpen(false)} className="px-4 py-3 text-center bg-brand-orange text-white rounded-full font-semibold">Get Started</Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
