@@ -143,6 +143,214 @@ export type Database = {
           },
         ]
       }
+      challenge_submissions: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          demo_url: string | null
+          description: string
+          file_url: string | null
+          id: string
+          repo_url: string | null
+          submitted_by: string
+          team_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          file_url?: string | null
+          id?: string
+          repo_url?: string | null
+          submitted_by: string
+          team_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          demo_url?: string | null
+          description?: string
+          file_url?: string | null
+          id?: string
+          repo_url?: string | null
+          submitted_by?: string
+          team_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_submissions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_submissions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_team_members: {
+        Row: {
+          joined_at: string
+          role: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string
+          role?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string
+          role?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_teams: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          id: string
+          lead_user_id: string
+          looking_for: string[]
+          name: string
+          pitch: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          id?: string
+          lead_user_id: string
+          looking_for?: string[]
+          name: string
+          pitch?: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          lead_user_id?: string
+          looking_for?: string[]
+          name?: string
+          pitch?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_teams_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_votes: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          submission_id: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          submission_id: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          submission_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_votes_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_votes_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          created_by: string
+          deadline: string | null
+          description: string
+          id: string
+          prize: string | null
+          slug: string
+          status: Database["public"]["Enums"]["challenge_status"]
+          tags: string[]
+          title: string
+          updated_at: string
+          winner_submission_id: string | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          created_by: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          prize?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["challenge_status"]
+          tags?: string[]
+          title: string
+          updated_at?: string
+          winner_submission_id?: string | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string
+          deadline?: string | null
+          description?: string
+          id?: string
+          prize?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["challenge_status"]
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          winner_submission_id?: string | null
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           cover_url: string | null
@@ -678,6 +886,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_community_activity: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -696,6 +905,7 @@ export type Database = {
         | "offer"
         | "rejected"
         | "withdrawn"
+      challenge_status: "draft" | "open" | "judging" | "closed"
       course_level: "fundamental" | "intermediate" | "advanced"
       notification_type:
         | "project_like"
@@ -841,6 +1051,7 @@ export const Constants = {
         "rejected",
         "withdrawn",
       ],
+      challenge_status: ["draft", "open", "judging", "closed"],
       course_level: ["fundamental", "intermediate", "advanced"],
       notification_type: [
         "project_like",
