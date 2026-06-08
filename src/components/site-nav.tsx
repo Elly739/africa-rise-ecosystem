@@ -7,6 +7,7 @@ const navLinks = [
   { to: "/courses" as const, label: "Learn" },
   { to: "/careers" as const, label: "Careers" },
   { to: "/innovate" as const, label: "Innovate" },
+  { to: "/challenges" as const, label: "Challenges" },
   { to: "/community" as const, label: "Community" },
 ];
 
