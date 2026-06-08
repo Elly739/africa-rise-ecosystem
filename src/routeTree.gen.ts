@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as InnovateRouteImport } from './routes/innovate'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -35,6 +36,11 @@ const InnovateRoute = InnovateRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
+  '/challenges': typeof ChallengesRoute
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
+  '/challenges': typeof ChallengesRoute
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
+  '/challenges': typeof ChallengesRoute
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/careers'
+    | '/challenges'
     | '/community'
     | '/innovate'
     | '/advisor'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/careers'
+    | '/challenges'
     | '/community'
     | '/innovate'
     | '/advisor'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/careers'
+    | '/challenges'
     | '/community'
     | '/innovate'
     | '/_authenticated/advisor'
@@ -234,6 +246,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CareersRoute: typeof CareersRoute
+  ChallengesRoute: typeof ChallengesRoute
   CommunityRoute: typeof CommunityRouteWithChildren
   InnovateRoute: typeof InnovateRouteWithChildren
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -416,6 +436,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CareersRoute: CareersRoute,
+  ChallengesRoute: ChallengesRoute,
   CommunityRoute: CommunityRouteWithChildren,
   InnovateRoute: InnovateRouteWithChildren,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
@@ -424,3 +445,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
