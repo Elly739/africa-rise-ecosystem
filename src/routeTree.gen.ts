@@ -20,6 +20,7 @@ import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$projectSlug'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
+import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
@@ -82,6 +83,11 @@ const CommunityDiscussionIdRoute = CommunityDiscussionIdRouteImport.update({
   path: '/$discussionId',
   getParentRoute: () => CommunityRoute,
 } as any)
+const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ChallengesRoute,
+} as any)
 const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   id: '/mentor',
   path: '/mentor',
@@ -125,7 +131,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
-  '/challenges': typeof ChallengesRoute
+  '/challenges': typeof ChallengesRouteWithChildren
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
@@ -144,7 +151,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
-  '/challenges': typeof ChallengesRoute
+  '/challenges': typeof ChallengesRouteWithChildren
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
@@ -165,7 +173,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRoute
-  '/challenges': typeof ChallengesRoute
+  '/challenges': typeof ChallengesRouteWithChildren
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cv'
     | '/_authenticated/dashboard'
     | '/_authenticated/mentor'
+    | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
@@ -246,7 +258,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CareersRoute: typeof CareersRoute
-  ChallengesRoute: typeof ChallengesRoute
+  ChallengesRoute: typeof ChallengesRouteWithChildren
   CommunityRoute: typeof CommunityRouteWithChildren
   InnovateRoute: typeof InnovateRouteWithChildren
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
@@ -332,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityDiscussionIdRouteImport
       parentRoute: typeof CommunityRoute
     }
+    '/challenges/$slug': {
+      id: '/challenges/$slug'
+      path: '/$slug'
+      fullPath: '/challenges/$slug'
+      preLoaderRoute: typeof ChallengesSlugRouteImport
+      parentRoute: typeof ChallengesRoute
+    }
     '/_authenticated/mentor': {
       id: '/_authenticated/mentor'
       path: '/mentor'
@@ -407,6 +426,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ChallengesRouteChildren {
+  ChallengesSlugRoute: typeof ChallengesSlugRoute
+}
+
+const ChallengesRouteChildren: ChallengesRouteChildren = {
+  ChallengesSlugRoute: ChallengesSlugRoute,
+}
+
+const ChallengesRouteWithChildren = ChallengesRoute._addFileChildren(
+  ChallengesRouteChildren,
+)
+
 interface CommunityRouteChildren {
   CommunityDiscussionIdRoute: typeof CommunityDiscussionIdRoute
 }
@@ -436,7 +467,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CareersRoute: CareersRoute,
-  ChallengesRoute: ChallengesRoute,
+  ChallengesRoute: ChallengesRouteWithChildren,
   CommunityRoute: CommunityRouteWithChildren,
   InnovateRoute: InnovateRouteWithChildren,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
