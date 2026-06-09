@@ -133,15 +133,15 @@ function Dashboard() {
               {data.certificates.length === 0 ? (
                 <p className="text-brand-navy/60 text-sm">Pass a course quiz to earn your first certificate.</p>
               ) : (
-                <div className="grid md:grid-cols-3 gap-4">
+                <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {data.certificates.slice(0, 3).map((c: any) => (
-                    <div key={c.id} className="p-6 rounded-3xl bg-brand-navy text-white">
+                    <li key={c.id} className="p-6 rounded-3xl bg-brand-navy text-white">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-brand-mint mb-2">Certified</p>
                       <p className="font-display font-bold text-lg">{c.courses?.title}</p>
-                      <p className="font-mono text-xs text-white/40 mt-3">{c.code}</p>
-                    </div>
+                      <p className="font-mono text-xs text-white/70 mt-3">{c.code}</p>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
             </section>
           </>
