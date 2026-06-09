@@ -87,7 +87,7 @@ function Dashboard() {
                   </Link>
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {data.enrollments.map((e: any) => {
                     const total = data.lessonsByCourse[e.course_id] ?? 0;
                     const done = data.completedByCourse[e.course_id] ?? 0;
@@ -97,16 +97,24 @@ function Dashboard() {
                         key={e.course_id}
                         to="/courses/$courseId"
                         params={{ courseId: e.course_id }}
-                        className="bg-white p-6 rounded-3xl border border-brand-navy/5 hover:shadow-xl hover:shadow-brand-navy/5 transition-all"
+                        aria-label={`${e.courses?.title} — ${pct}% complete`}
+                        className="bg-white p-6 rounded-3xl border border-brand-navy/5 hover:shadow-xl hover:shadow-brand-navy/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
                       >
                         <p className="text-[10px] font-bold uppercase tracking-widest text-brand-orange mb-2">{e.courses?.level}</p>
                         <h3 className="font-display text-lg font-bold mb-2">{e.courses?.title}</h3>
-                        <p className="text-sm text-brand-navy/60 mb-6 line-clamp-2">{e.courses?.summary}</p>
-                        <div className="flex items-center justify-between text-xs font-semibold text-brand-navy/60 mb-2">
+                        <p className="text-sm text-brand-navy/70 mb-6 line-clamp-2">{e.courses?.summary}</p>
+                        <div className="flex items-center justify-between text-xs font-semibold text-brand-navy/70 mb-2">
                           <span>{done}/{total} lessons</span>
-                          <span>{pct}%</span>
+                          <span aria-hidden="true">{pct}%</span>
                         </div>
-                        <div className="h-1.5 bg-brand-clay rounded-full overflow-hidden">
+                        <div
+                          role="progressbar"
+                          aria-valuenow={pct}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-label={`Course progress: ${pct} percent`}
+                          className="h-1.5 bg-brand-clay rounded-full overflow-hidden"
+                        >
                           <div className="h-full bg-brand-orange" style={{ width: `${pct}%` }} />
                         </div>
                       </Link>
@@ -115,6 +123,7 @@ function Dashboard() {
                 </div>
               )}
             </section>
+
 
             <section>
               <div className="flex items-center justify-between mb-6">
