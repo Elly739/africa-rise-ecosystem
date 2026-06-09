@@ -160,7 +160,7 @@ function Landing() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {[
             { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
             { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
@@ -169,24 +169,26 @@ function Landing() {
             { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
             { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
           ].map((p) => (
-            <Link
-              key={p.label}
-              to={p.to}
-              {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
-              className="group bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
-                <img src={p.img} alt={p.label} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
-              </div>
-              <div className="p-6">
-                <h4 className="font-display font-bold text-lg">{p.label}</h4>
-                <p className="text-sm text-brand-navy/60 mt-2 leading-relaxed">{p.desc}</p>
-                <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">Open <span aria-hidden>→</span></span>
-              </div>
-            </Link>
+            <li key={p.label}>
+              <Link
+                to={p.to}
+                {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
+                aria-label={`${p.label}: ${p.desc}`}
+                className="group block bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
+                  <img src={p.img} alt="" aria-hidden="true" loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-display font-bold text-lg">{p.label}</h3>
+                  <p className="text-sm text-brand-navy/70 mt-2 leading-relaxed">{p.desc}</p>
+                  <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">Open <span aria-hidden>→</span></span>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <SiteFooter />
