@@ -4,6 +4,12 @@ import { listCourses } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import heroImage from "@/assets/hero-student.jpg";
+import learnImg from "@/assets/module-learn.jpg";
+import careersImg from "@/assets/module-careers.jpg";
+import innovateImg from "@/assets/module-innovate.jpg";
+import communityImg from "@/assets/module-community.jpg";
+import mentorImg from "@/assets/module-mentor.jpg";
+import challengesImg from "@/assets/module-challenges.jpg";
 
 const coursesQuery = queryOptions({
   queryKey: ["courses", "landing"],
@@ -154,19 +160,30 @@ function Landing() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { icon: "📘", label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, color: "bg-brand-mint/20 text-brand-mint" },
-            { icon: "🚀", label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, color: "bg-brand-orange/20 text-brand-orange" },
-            { icon: "🧑‍💻", label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, color: "bg-brand-mint/20 text-brand-mint" },
-            { icon: "🌍", label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, color: "bg-brand-navy/10 text-brand-navy" },
-            { icon: "🤖", label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, color: "bg-brand-orange/20 text-brand-orange" },
+            { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
+            { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
+            { img: innovateImg, label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, tag: "Step 03" },
+            { img: challengesImg, label: "Challenges", desc: "Compete in hackathons. Form teams. Win prizes.", to: "/challenges" as const, tag: "Step 04" },
+            { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
+            { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
           ].map((p) => (
-            <Link key={p.label} to={p.to} {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})} className="group bg-white border border-brand-clay rounded-2xl p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-              <div className={`size-12 rounded-xl flex items-center justify-center text-xl mb-4 ${p.color}`}>{p.icon}</div>
-              <h4 className="font-display font-bold">{p.label}</h4>
-              <p className="text-xs text-brand-navy/55 mt-2 leading-relaxed">{p.desc}</p>
-              <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange opacity-0 group-hover:opacity-100 transition-opacity">Open →</span>
+            <Link
+              key={p.label}
+              to={p.to}
+              {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
+              className="group bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
+                <img src={p.img} alt={p.label} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
+              </div>
+              <div className="p-6">
+                <h4 className="font-display font-bold text-lg">{p.label}</h4>
+                <p className="text-sm text-brand-navy/60 mt-2 leading-relaxed">{p.desc}</p>
+                <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">Open <span aria-hidden>→</span></span>
+              </div>
             </Link>
           ))}
         </div>

@@ -3,6 +3,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboard } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
+import learnImg from "@/assets/module-learn.jpg";
+import careersImg from "@/assets/module-careers.jpg";
+import innovateImg from "@/assets/module-innovate.jpg";
+import communityImg from "@/assets/module-community.jpg";
+import mentorImg from "@/assets/module-mentor.jpg";
+import challengesImg from "@/assets/module-challenges.jpg";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · SkillBridge Africa" }] }),
@@ -26,17 +32,33 @@ function Dashboard() {
         </header>
 
         {/* Ecosystem quick-jump */}
-        <section className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
-            { label: "Courses", to: "/courses" as const, icon: "📘" },
-            { label: "Careers", to: "/careers" as const, icon: "🚀" },
-            { label: "Innovate", to: "/innovate" as const, icon: "🧑‍💻" },
-            { label: "Community", to: "/community" as const, icon: "🌍" },
-            { label: "AI Mentor", to: "/mentor" as const, icon: "🤖" },
+            { label: "Courses", desc: "Learn", to: "/courses" as const, img: learnImg },
+            { label: "Careers", desc: "Apply", to: "/careers" as const, img: careersImg },
+            { label: "Innovate", desc: "Build", to: "/innovate" as const, img: innovateImg },
+            { label: "Challenges", desc: "Compete", to: "/challenges" as const, img: challengesImg },
+            { label: "Community", desc: "Connect", to: "/community" as const, img: communityImg },
+            { label: "AI Mentor", desc: "Get coached", to: "/mentor" as const, img: mentorImg },
           ].map((m) => (
-            <Link key={m.label} to={m.to} className="bg-white border border-brand-navy/5 rounded-2xl p-4 hover:shadow-md transition-shadow text-center">
-              <div className="text-2xl mb-1">{m.icon}</div>
-              <div className="text-xs font-bold">{m.label}</div>
+            <Link
+              key={m.label}
+              to={m.to}
+              className="group relative aspect-[4/5] rounded-2xl overflow-hidden border border-brand-navy/5 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+            >
+              <img
+                src={m.img}
+                alt={m.label}
+                loading="lazy"
+                width={800}
+                height={800}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">{m.desc}</div>
+                <div className="font-display font-bold text-sm leading-tight mt-0.5">{m.label}</div>
+              </div>
             </Link>
           ))}
         </section>
