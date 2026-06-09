@@ -20,47 +20,53 @@ function Dashboard() {
   const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fn() });
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-navy">
+    <div className="min-h-dvh bg-brand-bg text-brand-navy">
       <SiteNav />
-      <main className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10 sm:space-y-12">
         <header className="space-y-2">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-orange">Welcome back</p>
-          <h1 className="font-display text-4xl md:text-5xl font-bold">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold break-words">
             {data?.profile?.display_name ?? "Learner"}
           </h1>
-          <p className="text-brand-navy/60">Keep your momentum — your future self will thank you.</p>
+          <p className="text-brand-navy/70 text-sm sm:text-base">Keep your momentum — your future self will thank you.</p>
         </header>
 
         {/* Ecosystem quick-jump */}
-        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {[
-            { label: "Courses", desc: "Learn", to: "/courses" as const, img: learnImg },
-            { label: "Careers", desc: "Apply", to: "/careers" as const, img: careersImg },
-            { label: "Innovate", desc: "Build", to: "/innovate" as const, img: innovateImg },
-            { label: "Challenges", desc: "Compete", to: "/challenges" as const, img: challengesImg },
-            { label: "Community", desc: "Connect", to: "/community" as const, img: communityImg },
-            { label: "AI Mentor", desc: "Get coached", to: "/mentor" as const, img: mentorImg },
-          ].map((m) => (
-            <Link
-              key={m.label}
-              to={m.to}
-              className="group relative aspect-[4/5] rounded-2xl overflow-hidden border border-brand-navy/5 hover:shadow-xl hover:-translate-y-0.5 transition-all"
-            >
-              <img
-                src={m.img}
-                alt={m.label}
-                loading="lazy"
-                width={800}
-                height={800}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">{m.desc}</div>
-                <div className="font-display font-bold text-sm leading-tight mt-0.5">{m.label}</div>
-              </div>
-            </Link>
-          ))}
+        <section aria-labelledby="ecosystem-heading">
+          <h2 id="ecosystem-heading" className="sr-only">Ecosystem quick links</h2>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            {[
+              { label: "Courses", desc: "Learn", to: "/courses" as const, img: learnImg },
+              { label: "Careers", desc: "Apply", to: "/careers" as const, img: careersImg },
+              { label: "Innovate", desc: "Build", to: "/innovate" as const, img: innovateImg },
+              { label: "Challenges", desc: "Compete", to: "/challenges" as const, img: challengesImg },
+              { label: "Community", desc: "Connect", to: "/community" as const, img: communityImg },
+              { label: "AI Mentor", desc: "Get coached", to: "/mentor" as const, img: mentorImg },
+            ].map((m) => (
+              <li key={m.label}>
+                <Link
+                  to={m.to}
+                  aria-label={`${m.label} — ${m.desc}`}
+                  className="group relative block aspect-[4/5] rounded-2xl overflow-hidden border border-brand-navy/5 hover:shadow-xl hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+                >
+                  <img
+                    src={m.img}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    width={800}
+                    height={1000}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-brand-navy/10" />
+                  <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">{m.desc}</div>
+                    <div className="font-display font-bold text-sm leading-tight mt-0.5">{m.label}</div>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
 
         {isLoading && <p className="text-brand-navy/60">Loading…</p>}
