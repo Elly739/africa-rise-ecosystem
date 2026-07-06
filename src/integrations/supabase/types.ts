@@ -493,6 +493,24 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed_at: string
@@ -643,6 +661,10 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          interests: string[]
+          onboarded_at: string | null
+          primary_goal: string | null
+          skill_level: string | null
           updated_at: string
         }
         Insert: {
@@ -652,6 +674,10 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          interests?: string[]
+          onboarded_at?: string | null
+          primary_goal?: string | null
+          skill_level?: string | null
           updated_at?: string
         }
         Update: {
@@ -661,6 +687,10 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          interests?: string[]
+          onboarded_at?: string | null
+          primary_goal?: string | null
+          skill_level?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -769,6 +799,7 @@ export type Database = {
       quiz_questions: {
         Row: {
           correct_index: number
+          explanation: string | null
           id: string
           options: Json
           order: number
@@ -777,6 +808,7 @@ export type Database = {
         }
         Insert: {
           correct_index: number
+          explanation?: string | null
           id?: string
           options: Json
           order?: number
@@ -785,6 +817,7 @@ export type Database = {
         }
         Update: {
           correct_index?: number
+          explanation?: string | null
           id?: string
           options?: Json
           order?: number
@@ -881,11 +914,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_stats: {
+        Row: {
+          last_active: string | null
+          level: number
+          streak_days: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          last_active?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          last_active?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      award_xp: {
+        Args: { _amount: number; _user_id: string }
+        Returns: undefined
+      }
       has_community_activity: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
