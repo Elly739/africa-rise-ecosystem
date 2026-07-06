@@ -1,87 +1,66 @@
-## SkillBridge Africa — MVP Build Plan
+# Next iteration — Quick wins across 6 areas
 
-**Positioning:** A digital growth ecosystem for African students and young innovators. The MVP ships the **Learn** module fully functional, with Build / Connect / Grow / Launch shown as roadmap teasers.
+A single focused pass adding small, high-impact features across every area you picked (Personalization & AI, Career outcomes, Community depth, Engagement & retention) plus UX polish for Onboarding, Lesson/Quiz player, and Innovate/Projects. No large new modules — every item is 1 file or 1 small addition.
 
----
+## 1. Onboarding wizard (first-run)
+- New route `/_authenticated/welcome` — 3 steps: pick interests (subject tags), skill level (beginner/intermediate/advanced), goal (learn / find job / build).
+- Save to `profiles` (add `interests text[]`, `skill_level text`, `primary_goal text`, `onboarded_at timestamptz`).
+- `_authenticated/route.tsx` redirects to `/welcome` once when `onboarded_at IS NULL`.
+- Powers personalization in items 2 and 5.
 
-### 1. Foundation & Design System
+## 2. Personalized dashboard "For you" strip
+- New section on `/dashboard`: recommended courses + opportunities + challenges matched to `interests` / `skill_level`.
+- Simple server fn: rank by tag overlap, exclude already-enrolled/applied. No ML — deterministic scoring.
 
-- Enable **Lovable Cloud** (database, auth, storage).
-- Set up the chosen design tokens in `src/styles.css` (oklch equivalents):
-  - `--brand-bg` cream `#FDFCF5`, `--brand-navy` `#1A1C2E`, `--brand-orange` `#FF5F05`, `--brand-mint` `#00D494`, `--brand-clay` `#E8E4D9`
-  - Fonts: **Bricolage Grotesque** (display) + **Inter** (body) — loaded via `<link>` in `__root.tsx`
-- Map these as semantic shadcn tokens so the whole app uses one system.
+## 3. Engagement: streaks + XP
+- Add `user_stats` table: `xp int`, `streak_days int`, `last_active date`, `level int` (derived).
+- Increment on: lesson complete (+10), quiz pass (+25), project like received (+5), discussion reply (+3), challenge submission (+50).
+- Show compact streak/XP chip in `site-nav` next to notification bell, with a tooltip breakdown.
 
-### 2. Routes
+## 4. Community depth: public profiles + follow
+- New route `/u/$userId` — avatar, bio, country, XP/level, badges (from certificates), projects, recent discussions.
+- Add `follows` table (`follower_id`, `following_id`). Follow button on profile + author names across community/innovate become links.
+- New notification type `new_follower`.
 
-```
-/                          Landing page (vision + hero + course preview)
-/auth                      Sign up / sign in (email+password, Google)
-/_authenticated/
-  dashboard               Learner home: enrolled courses, progress, certificates
-  courses                 Browse all subjects/courses
-  courses/$courseId       Course detail + lesson list + enroll
-  lessons/$lessonId       Lesson player (markdown content)
-  quizzes/$quizId         Quiz runner → records score
-  certificates            User's earned certificates
-  profile                 Profile + settings
-```
+## 5. Career outcomes: application tracker + one-click apply
+- Careers page gets a "My applications" tab: kanban-style Applied / In review / Interview / Offer / Rejected (uses existing `applications.status`).
+- One-click apply button pre-fills from saved CV; disables when no CV exists with a nudge to `/cv`.
+- Add "Similar opportunities" strip on each career card using tag/type match.
 
-Auth-protected routes live under the integration-managed `_authenticated/` layout. Landing, courses browse, and course detail are public (read-only).
+## 6. Innovate polish
+- Add cover image upload to project create form (Supabase Storage bucket `project-covers`, public read).
+- Add filter chips (status: idea/building/launched) and search box on `/innovate`.
+- Contributor avatars strip on project detail (from `project_likes` — top 5 supporters).
 
-### 3. Database (Lovable Cloud)
+## 7. Lesson & quiz player polish
+- Better markdown: enable GFM (`remark-gfm`), syntax highlighting (`rehype-highlight`), and proper `<Prose>` typography wrapper.
+- Sticky bottom bar with Prev / Mark complete / Next; keyboard shortcuts (← → for nav, `c` to complete).
+- Quiz: progress bar, per-question review after submit showing correct answer + explanation field (add `quiz_questions.explanation text`).
 
-- `profiles` — id (→ auth.users), display_name, avatar_url, country, bio
-- `subjects` — id, title, slug, description, icon, color
-- `courses` — id, subject_id, title, slug, summary, level (fundamental/intermediate/advanced), cover_url
-- `lessons` — id, course_id, order, title, content (markdown), duration_min
-- `quizzes` — id, course_id, title, passing_score
-- `quiz_questions` — id, quiz_id, question, options (jsonb), correct_index
-- `enrollments` — user_id, course_id, enrolled_at
-- `lesson_progress` — user_id, lesson_id, completed_at
-- `quiz_attempts` — user_id, quiz_id, score, passed, taken_at
-- `certificates` — id, user_id, course_id, issued_at, code
-
-RLS: users read/write only their own enrollments/progress/attempts/certificates; subjects/courses/lessons/quizzes are public read; admin role (via `user_roles` + `has_role()`) can write course content.
-
-### 4. Landing Page (matches selected direction exactly)
-
-Port the v1 prototype DOM faithfully:
-- Sticky nav with orange-square logo + Learn/Build/Connect links + Get Started CTA
-- Hero: mint badge, big serif headline with orange "learning", dual CTAs, framed hero image with floating "Live Now" course card
-- Dark navy "The Learn Module" section with 3 course cards (2 course + 1 orange CTA card)
-- Light ecosystem section showing Learn (active) + Build/Connect/Launch (dimmed roadmap)
-- Clay-colored footer CTA block
-- Generate the hero image via `generate_image` (prompt from `data-lov-image-placeholder`)
-
-### 5. Learn Module Functionality
-
-- **Dashboard:** enrolled courses with progress bars, "Continue learning" CTA, recent certificates strip
-- **Courses browse:** filter by subject, level; cards mirror landing styling
-- **Course detail:** overview, lesson list with completion checkmarks, enroll button, quiz at end
-- **Lesson player:** markdown content render, "Mark complete" → updates `lesson_progress`, prev/next nav
-- **Quiz runner:** one-question-at-a-time, score on submit, on pass → issue certificate
-- **Certificates page:** card list with verification code
-
-### 6. Auth
-
-- Email/password + Google (via Lovable broker). Auto-create profile on signup via trigger.
-- `/auth` page styled in brand system; redirect to `/dashboard` on success.
-
-### 7. Seed Content
-
-Seed ~3 subjects, ~4 courses (Data Science for Fintech, AgriTech Solutions, Digital Product Design, Fullstack Web3), each with 3–6 lessons and one quiz, so the app is alive on first visit.
+## 8. AI Mentor tie-in (small)
+- Mentor gets 3 new suggested prompts derived from user's `interests` + current in-progress course.
+- Add a "Weekly plan" button that streams a personalized 7-day study plan (uses existing AI chat, new system prompt only — no new infra).
 
 ---
 
-### Technical Notes
+## Technical summary
 
-- TanStack Start file-based routes; data via `createServerFn` + TanStack Query loaders
-- `requireSupabaseAuth` middleware on user-scoped server fns; public reads via `supabaseAdmin` server fns
-- Lesson markdown rendered with `react-markdown`
-- Certificate "code" = short nanoid for shareable verification URL (future)
-- Out of scope this turn: Build/Connect/Grow/Launch modules, AI assistant, CV builder, internship board — surfaced as roadmap UI only
+**DB migration (single):**
+- `profiles`: add `interests text[] default '{}'`, `skill_level text`, `primary_goal text`, `onboarded_at timestamptz`.
+- New tables: `user_stats`, `follows` (+ GRANTs + RLS + policies).
+- `quiz_questions`: add `explanation text`.
+- Storage bucket `project-covers` (public read, authed write).
+- Triggers to bump XP on lesson_progress/quiz_attempts/project_likes/discussion_replies/challenge_submissions.
+- Trigger to create `notifications` on new follow.
 
-### Deliverable on Approval
+**New/edited files (~12):**
+- `src/routes/_authenticated/welcome.tsx` (new)
+- `src/routes/u.$userId.tsx` (new)
+- `src/lib/api/personalization.functions.ts` (new)
+- `src/lib/api/social.functions.ts` (new — follow/unfollow, get profile)
+- `src/lib/api/stats.functions.ts` (new — read XP/streak)
+- Edits: `_authenticated/route.tsx`, `dashboard.tsx`, `site-nav.tsx`, `careers.tsx`, `innovate.tsx`, `innovate.$projectSlug.tsx`, `lessons.$lessonId.tsx`, `quizzes.$quizId.tsx`, `mentor.tsx`.
 
-A working Learn module with auth, seeded course content, lesson + quiz flow, certificate issuance, and a landing page that matches the chosen design direction.
+**Out of scope this pass:** email digests, push notifications, employer accounts, mentorship matching, live events, leaderboards, referrals, interview-prep AI, video lessons, real-time collab. Flag these for a future iteration.
+
+Approve and I'll ship it in build mode.
