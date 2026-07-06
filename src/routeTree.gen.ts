@@ -18,10 +18,12 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as UUserIdRouteImport } from './routes/u.$userId'
 import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$projectSlug'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
+import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
@@ -77,6 +79,11 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UUserIdRoute = UUserIdRouteImport.update({
+  id: '/u/$userId',
+  path: '/u/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InnovateProjectSlugRoute = InnovateProjectSlugRouteImport.update({
   id: '/$projectSlug',
   path: '/$projectSlug',
@@ -96,6 +103,11 @@ const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ChallengesRoute,
+} as any)
+const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   id: '/mentor',
@@ -169,10 +181,12 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/welcome': typeof AuthenticatedWelcomeRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
+  '/u/$userId': typeof UUserIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
@@ -193,10 +207,12 @@ export interface FileRoutesByTo {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/welcome': typeof AuthenticatedWelcomeRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
+  '/u/$userId': typeof UUserIdRoute
   '/courses': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
@@ -219,10 +235,12 @@ export interface FileRoutesById {
   '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
+  '/u/$userId': typeof UUserIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/lessons/$lessonId': typeof AuthenticatedLessonsLessonIdRoute
@@ -245,10 +263,12 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/welcome'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
+    | '/u/$userId'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/lessons/$lessonId'
@@ -269,10 +289,12 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/welcome'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
+    | '/u/$userId'
     | '/courses'
     | '/.mcp/invoke-tool/$tool'
     | '/lessons/$lessonId'
@@ -294,10 +316,12 @@ export interface FileRouteTypes {
     | '/_authenticated/cv'
     | '/_authenticated/dashboard'
     | '/_authenticated/mentor'
+    | '/_authenticated/welcome'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
+    | '/u/$userId'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/lessons/$lessonId'
@@ -316,6 +340,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  UUserIdRoute: typeof UUserIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -385,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/u/$userId': {
+      id: '/u/$userId'
+      path: '/u/$userId'
+      fullPath: '/u/$userId'
+      preLoaderRoute: typeof UUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/innovate/$projectSlug': {
       id: '/innovate/$projectSlug'
       path: '/$projectSlug'
@@ -412,6 +444,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/challenges/$slug'
       preLoaderRoute: typeof ChallengesSlugRouteImport
       parentRoute: typeof ChallengesRoute
+    }
+    '/_authenticated/welcome': {
+      id: '/_authenticated/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof AuthenticatedWelcomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mentor': {
       id: '/_authenticated/mentor'
@@ -492,6 +531,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCvRoute: typeof AuthenticatedCvRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
+  AuthenticatedWelcomeRoute: typeof AuthenticatedWelcomeRoute
   AuthenticatedLessonsLessonIdRoute: typeof AuthenticatedLessonsLessonIdRoute
   AuthenticatedQuizzesQuizIdRoute: typeof AuthenticatedQuizzesQuizIdRoute
 }
@@ -502,6 +542,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCvRoute: AuthenticatedCvRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
+  AuthenticatedWelcomeRoute: AuthenticatedWelcomeRoute,
   AuthenticatedLessonsLessonIdRoute: AuthenticatedLessonsLessonIdRoute,
   AuthenticatedQuizzesQuizIdRoute: AuthenticatedQuizzesQuizIdRoute,
 }
@@ -558,6 +599,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
+  UUserIdRoute: UUserIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
