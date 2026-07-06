@@ -38,7 +38,7 @@ export const getForYou = createServerFn({ method: "GET" })
     const [courses, opps, challenges, enrolled] = await Promise.all([
       supabaseAdmin.from("courses").select("id,title,slug,summary,level").limit(20),
       supabaseAdmin.from("opportunities").select("id,title,organization,type,tags,location,remote,apply_url").order("created_at", { ascending: false }).limit(20),
-      supabaseAdmin.from("challenges").select("id,title,slug,summary,status,tags").eq("status", "open").limit(10),
+      supabaseAdmin.from("challenges").select("id,title,slug,description,status,tags").eq("status", "open").limit(10),
       supabase.from("enrollments").select("course_id"),
     ]);
 

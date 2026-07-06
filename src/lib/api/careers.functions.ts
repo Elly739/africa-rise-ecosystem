@@ -31,7 +31,7 @@ export const applyToOpportunity = createServerFn({ method: "POST" })
     const { error } = await context.supabase.from("applications").insert({
       user_id: context.userId,
       opportunity_id: data.opportunityId,
-      status: "applied",
+      status: "submitted",
       notes: data.notes ?? null,
     });
     if (error) throw error;
