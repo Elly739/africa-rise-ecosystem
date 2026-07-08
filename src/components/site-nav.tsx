@@ -27,6 +27,14 @@ export function SiteNav() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const statsFn = useServerFn(getMyStats);
+  const { data: stats } = useQuery({
+    queryKey: ["my-stats"],
+    queryFn: () => statsFn(),
+    enabled: signedIn,
+    staleTime: 60_000,
+  });
+
   return (
     <nav className="sticky top-0 z-40 bg-brand-bg/85 backdrop-blur-md border-b border-brand-navy/5">
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto gap-3">
