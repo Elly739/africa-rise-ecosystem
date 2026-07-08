@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboard } from "@/lib/api/learn.functions";
+import { getForYou } from "@/lib/api/personalization.functions";
 import { SiteNav } from "@/components/site-nav";
 import learnImg from "@/assets/module-learn.jpg";
 import careersImg from "@/assets/module-careers.jpg";
@@ -17,7 +18,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const fn = useServerFn(getDashboard);
+  const forYouFn = useServerFn(getForYou);
   const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fn() });
+  const { data: forYou } = useQuery({ queryKey: ["for-you"], queryFn: () => forYouFn() });
 
   return (
     <div className="min-h-dvh bg-brand-bg text-brand-navy">
