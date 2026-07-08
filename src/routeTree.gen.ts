@@ -28,6 +28,7 @@ import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
 import { Route as AuthenticatedCertificatesRouteImport } from './routes/_authenticated/certificates'
+import { Route as AuthenticatedApplicationsRouteImport } from './routes/_authenticated/applications'
 import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticated/advisor'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -130,6 +131,12 @@ const AuthenticatedCertificatesRoute =
     path: '/certificates',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedApplicationsRoute =
+  AuthenticatedApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdvisorRoute = AuthenticatedAdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
@@ -177,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/advisor': typeof AuthenticatedAdvisorRoute
+  '/applications': typeof AuthenticatedApplicationsRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -203,6 +211,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/advisor': typeof AuthenticatedAdvisorRoute
+  '/applications': typeof AuthenticatedApplicationsRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
+  '/_authenticated/applications': typeof AuthenticatedApplicationsRoute
   '/_authenticated/certificates': typeof AuthenticatedCertificatesRoute
   '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/advisor'
+    | '/applications'
     | '/certificates'
     | '/cv'
     | '/dashboard'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/advisor'
+    | '/applications'
     | '/certificates'
     | '/cv'
     | '/dashboard'
@@ -312,6 +324,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/advisor'
+    | '/_authenticated/applications'
     | '/_authenticated/certificates'
     | '/_authenticated/cv'
     | '/_authenticated/dashboard'
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCertificatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/applications': {
+      id: '/_authenticated/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof AuthenticatedApplicationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/advisor': {
       id: '/_authenticated/advisor'
       path: '/advisor'
@@ -527,6 +547,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
+  AuthenticatedApplicationsRoute: typeof AuthenticatedApplicationsRoute
   AuthenticatedCertificatesRoute: typeof AuthenticatedCertificatesRoute
   AuthenticatedCvRoute: typeof AuthenticatedCvRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -538,6 +559,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
+  AuthenticatedApplicationsRoute: AuthenticatedApplicationsRoute,
   AuthenticatedCertificatesRoute: AuthenticatedCertificatesRoute,
   AuthenticatedCvRoute: AuthenticatedCvRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
