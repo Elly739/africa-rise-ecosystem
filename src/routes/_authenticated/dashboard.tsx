@@ -72,6 +72,62 @@ function Dashboard() {
           </ul>
         </section>
 
+        {/* For You — personalized recs */}
+        {forYou && (forYou.opportunities.length > 0 || forYou.challenges.length > 0 || forYou.courses.length > 0) && (
+          <section aria-labelledby="for-you-heading" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 id="for-you-heading" className="font-display text-2xl font-bold">For you</h2>
+                <p className="text-sm text-brand-navy/60">
+                  {forYou.interests.length > 0
+                    ? `Picked from your interests: ${forYou.interests.slice(0, 4).join(", ")}`
+                    : "Pick your interests in settings to sharpen these picks."}
+                </p>
+              </div>
+              <Link to="/welcome" className="text-xs font-bold text-brand-orange">Update interests →</Link>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {forYou.opportunities.slice(0, 3).map((o: any) => (
+                <Link
+                  key={o.id}
+                  to="/careers"
+                  className="p-5 rounded-3xl bg-white border border-brand-navy/5 hover:shadow-lg transition-all"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">{o.type}</p>
+                  <p className="font-display font-bold mt-1 line-clamp-2">{o.title}</p>
+                  <p className="text-xs text-brand-navy/60 mt-1">{o.organization}{o.location ? ` · ${o.location}` : ""}</p>
+                </Link>
+              ))}
+              {forYou.challenges.slice(0, 2).map((c: any) => (
+                <Link
+                  key={c.id}
+                  to="/challenges/$slug"
+                  params={{ slug: c.slug }}
+                  className="p-5 rounded-3xl bg-brand-navy text-white hover:shadow-lg transition-all"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">Challenge</p>
+                  <p className="font-display font-bold mt-1 line-clamp-2">{c.title}</p>
+                  <p className="text-xs text-white/70 mt-1 line-clamp-2">{c.description}</p>
+                </Link>
+              ))}
+              {forYou.courses.slice(0, 3).map((c: any) => (
+                <Link
+                  key={c.id}
+                  to="/courses/$courseId"
+                  params={{ courseId: c.id }}
+                  className="p-5 rounded-3xl bg-brand-clay border border-brand-navy/5 hover:shadow-lg transition-all"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-navy/50">{c.level ?? "Course"}</p>
+                  <p className="font-display font-bold mt-1 line-clamp-2">{c.title}</p>
+                  <p className="text-xs text-brand-navy/60 mt-1 line-clamp-2">{c.summary}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+
         {isLoading && <p className="text-brand-navy/60">Loading…</p>}
 
         {data && (
