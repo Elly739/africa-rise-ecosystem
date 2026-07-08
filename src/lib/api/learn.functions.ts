@@ -186,15 +186,24 @@ export const submitQuiz = createServerFn({ method: "POST" })
     if (!quiz) throw new Error("Quiz not found");
     const { data: qs } = await supabaseAdmin
       .from("quiz_questions")
-      .select("id, correct_index")
+      .select("id, correct_index, explanation, question, options")
       .eq("quiz_id", data.quizId);
 
-    const correctMap = new Map((qs ?? []).map((q) => [q.id, q.correct_index]));
-    const total = correctMap.size || 1;
+    const qMap = new Map((qs ?? []).map((q) => [q.id, q]));
+    const total = qMap.size || 1;
     let correct = 0;
-    for (const a of data.answers) {
-      if (correctMap.get(a.questionId) === a.choice) correct++;
-    }
+    const breakdown = data.answers.map((a) => {
+      const q = qMap.get(a.questionId);
+      const isCorrect = q ? q.correct_index === a.choice : false;
+      if (isCorrect) correct++;
+      return {
+        questionId: a.questionId,
+        userChoice: a.choice,
+        correctIndex: q?.correct_index ?? -1,
+        explanation: q?.explanation ?? null,
+        isCorrect,
+      };
+    });
     const score = Math.round((correct / total) * 100);
     const passed = score >= quiz.passing_score;
 
@@ -219,5 +228,5 @@ export const submitQuiz = createServerFn({ method: "POST" })
       if (!error && cert) certificateCode = cert.code;
     }
 
-    return { score, passed, total, correct, certificateCode };
+    return { score, passed, total, correct, certificateCode, breakdown };
   });

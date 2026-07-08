@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { NotificationBell } from "@/components/notification-bell";
+import { getMyStats } from "@/lib/api/stats.functions";
 
 const navLinks = [
   { to: "/courses" as const, label: "Learn" },
@@ -24,6 +27,14 @@ export function SiteNav() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const statsFn = useServerFn(getMyStats);
+  const { data: stats } = useQuery({
+    queryKey: ["my-stats"],
+    queryFn: () => statsFn(),
+    enabled: signedIn,
+    staleTime: 60_000,
+  });
+
   return (
     <nav className="sticky top-0 z-40 bg-brand-bg/85 backdrop-blur-md border-b border-brand-navy/5">
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto gap-3">
@@ -42,6 +53,14 @@ export function SiteNav() {
         <div className="flex items-center gap-1 sm:gap-2">
           {signedIn ? (
             <>
+              {stats && (stats.xp > 0 || stats.streak_days > 0) && (
+                <div className="hidden md:flex items-center gap-2 mr-1" aria-label={`Level ${stats.level}, ${stats.xp} XP, ${stats.streak_days} day streak`}>
+                  <span className="px-2.5 py-1 rounded-full bg-brand-mint/15 text-brand-mint text-xs font-bold" title="Experience points">Lv {stats.level} · {stats.xp} XP</span>
+                  {stats.streak_days > 0 && (
+                    <span className="px-2.5 py-1 rounded-full bg-brand-orange/15 text-brand-orange text-xs font-bold" title="Daily streak">🔥 {stats.streak_days}d</span>
+                  )}
+                </div>
+              )}
               <NotificationBell />
               <Link to="/dashboard" className="hidden sm:inline-flex px-3 py-2 text-sm font-semibold text-brand-navy">Dashboard</Link>
               <button
@@ -87,6 +106,7 @@ export function SiteNav() {
                   <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Dashboard</Link>
                   <Link to="/cv" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My CV</Link>
                   <Link to="/certificates" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Certificates</Link>
+                  <Link to="/applications" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My Applications</Link>
                 </>
               )}
             </div>
