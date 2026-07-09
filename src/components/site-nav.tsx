@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { NotificationBell } from "@/components/notification-bell";
 import { getMyStats } from "@/lib/api/stats.functions";
+import type { Database } from "@/integrations/supabase/types";
 
 const navLinks = [
   { to: "/courses" as const, label: "Learn" },
@@ -13,6 +14,8 @@ const navLinks = [
   { to: "/challenges" as const, label: "Challenges" },
   { to: "/community" as const, label: "Community" },
 ];
+
+const ADMIN_ROLES: Database["public"]["Enums"]["app_role"][] = ["admin", "moderator", "teacher", "partner"];
 
 export function SiteNav() {
   const [signedIn, setSignedIn] = useState(false);
@@ -34,6 +37,20 @@ export function SiteNav() {
     enabled: signedIn,
     staleTime: 60_000,
   });
+
+  const { data: userRoles } = useQuery({
+    queryKey: ["my-roles"],
+    queryFn: async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session) return [];
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.session.user.id);
+      return (data ?? []).map((r) => r.role);
+    },
+    enabled: signedIn,
+    staleTime: 5 * 60_000,
+  });
+
+  const isPrivileged = userRoles?.some((r) => ADMIN_ROLES.includes(r));
 
   return (
     <nav className="sticky top-0 z-40 bg-brand-bg/85 backdrop-blur-md border-b border-brand-navy/5">
@@ -63,6 +80,9 @@ export function SiteNav() {
               )}
               <NotificationBell />
               <Link to="/dashboard" className="hidden sm:inline-flex px-3 py-2 text-sm font-semibold text-brand-navy">Dashboard</Link>
+              {isPrivileged && (
+                <Link to="/admin" className="hidden sm:inline-flex px-3 py-2 text-sm font-semibold text-brand-orange">Admin</Link>
+              )}
               <button
                 onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
                 className="hidden sm:inline-flex px-4 py-2 bg-brand-navy text-white rounded-full text-sm font-semibold hover:bg-brand-navy/90"
@@ -104,6 +124,9 @@ export function SiteNav() {
                 <>
                   <Link to="/mentor" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold text-brand-mint hover:bg-brand-clay">AI Mentor</Link>
                   <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Dashboard</Link>
+                  {isPrivileged && (
+                    <Link to="/admin" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold text-brand-orange hover:bg-brand-clay">Admin</Link>
+                  )}
                   <Link to="/cv" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My CV</Link>
                   <Link to="/certificates" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Certificates</Link>
                   <Link to="/applications" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My Applications</Link>
