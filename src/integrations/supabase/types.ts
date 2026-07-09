@@ -961,7 +961,7 @@ export type Database = {
     }
     Enums: {
       ai_kind: "mentor" | "advisor"
-      app_role: "admin" | "student"
+      app_role: "admin" | "student" | "moderator" | "teacher" | "partner"
       application_status:
         | "submitted"
         | "under_review"
@@ -1106,7 +1106,7 @@ export const Constants = {
   public: {
     Enums: {
       ai_kind: ["mentor", "advisor"],
-      app_role: ["admin", "student"],
+      app_role: ["admin", "student", "moderator", "teacher", "partner"],
       application_status: [
         "submitted",
         "under_review",

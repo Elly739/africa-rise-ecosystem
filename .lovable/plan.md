@@ -1,66 +1,80 @@
-# Next iteration — Quick wins across 6 areas
+# Admin Dashboard — Quick Win Plan
 
-A single focused pass adding small, high-impact features across every area you picked (Personalization & AI, Career outcomes, Community depth, Engagement & retention) plus UX polish for Onboarding, Lesson/Quiz player, and Innovate/Projects. No large new modules — every item is 1 file or 1 small addition.
+Add a role-based admin area at `/admin` so you (and future moderators, teachers, and partners) can manage the platform without touching the backend.
 
-## 1. Onboarding wizard (first-run)
-- New route `/_authenticated/welcome` — 3 steps: pick interests (subject tags), skill level (beginner/intermediate/advanced), goal (learn / find job / build).
-- Save to `profiles` (add `interests text[]`, `skill_level text`, `primary_goal text`, `onboarded_at timestamptz`).
-- `_authenticated/route.tsx` redirects to `/welcome` once when `onboarded_at IS NULL`.
-- Powers personalization in items 2 and 5.
+## What we are building
 
-## 2. Personalized dashboard "For you" strip
-- New section on `/dashboard`: recommended courses + opportunities + challenges matched to `interests` / `skill_level`.
-- Simple server fn: rank by tag overlap, exclude already-enrolled/applied. No ML — deterministic scoring.
+A single admin hub with a sidebar that adapts to the user's role. The current app already has a `user_roles` table and a `has_role` helper, so we will extend the role enum and build a lightweight UI on top.
 
-## 3. Engagement: streaks + XP
-- Add `user_stats` table: `xp int`, `streak_days int`, `last_active date`, `level int` (derived).
-- Increment on: lesson complete (+10), quiz pass (+25), project like received (+5), discussion reply (+3), challenge submission (+50).
-- Show compact streak/XP chip in `site-nav` next to notification bell, with a tooltip breakdown.
+### Roles and permissions
 
-## 4. Community depth: public profiles + follow
-- New route `/u/$userId` — avatar, bio, country, XP/level, badges (from certificates), projects, recent discussions.
-- Add `follows` table (`follower_id`, `following_id`). Follow button on profile + author names across community/innovate become links.
-- New notification type `new_follower`.
+| Role | Access |
+|------|--------|
+| **admin** | Everything: stats, users, roles, all content, opportunities, applications |
+| **moderator** | Content moderation: projects, discussions, community reports |
+| **teacher** | Course/lesson/quiz content: view and edit learning content |
+| **partner** | Opportunities they posted + applications to those opportunities |
 
-## 5. Career outcomes: application tracker + one-click apply
-- Careers page gets a "My applications" tab: kanban-style Applied / In review / Interview / Offer / Rejected (uses existing `applications.status`).
-- One-click apply button pre-fills from saved CV; disables when no CV exists with a nudge to `/cv`.
-- Add "Similar opportunities" strip on each career card using tag/type match.
+Because the current `opportunities` table does not have a `posted_by` column, the partner view will start as read-only access to all opportunities and applications. A future iteration can scope partner access to their own postings.
 
-## 6. Innovate polish
-- Add cover image upload to project create form (Supabase Storage bucket `project-covers`, public read).
-- Add filter chips (status: idea/building/launched) and search box on `/innovate`.
-- Contributor avatars strip on project detail (from `project_likes` — top 5 supporters).
+## Database change
 
-## 7. Lesson & quiz player polish
-- Better markdown: enable GFM (`remark-gfm`), syntax highlighting (`rehype-highlight`), and proper `<Prose>` typography wrapper.
-- Sticky bottom bar with Prev / Mark complete / Next; keyboard shortcuts (← → for nav, `c` to complete).
-- Quiz: progress bar, per-question review after submit showing correct answer + explanation field (add `quiz_questions.explanation text`).
+Extend the existing `app_role` enum to include the new roles.
 
-## 8. AI Mentor tie-in (small)
-- Mentor gets 3 new suggested prompts derived from user's `interests` + current in-progress course.
-- Add a "Weekly plan" button that streams a personalized 7-day study plan (uses existing AI chat, new system prompt only — no new infra).
+```sql
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'moderator';
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'teacher';
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'partner';
+```
 
----
+## New files
 
-## Technical summary
+### Routes
 
-**DB migration (single):**
-- `profiles`: add `interests text[] default '{}'`, `skill_level text`, `primary_goal text`, `onboarded_at timestamptz`.
-- New tables: `user_stats`, `follows` (+ GRANTs + RLS + policies).
-- `quiz_questions`: add `explanation text`.
-- Storage bucket `project-covers` (public read, authed write).
-- Triggers to bump XP on lesson_progress/quiz_attempts/project_likes/discussion_replies/challenge_submissions.
-- Trigger to create `notifications` on new follow.
+```text
+src/routes/_authenticated/_admin.tsx              # layout + RBAC gate
+src/routes/_authenticated/_admin/dashboard.tsx    # stats + quick actions
+src/routes/_authenticated/_admin/users.tsx          # user list + role assignment
+src/routes/_authenticated/_admin/content.tsx        # projects + discussions moderation
+src/routes/_authenticated/_admin/opportunities.tsx  # opportunities + applications
+src/routes/_authenticated/_admin/courses.tsx        # course/lesson/quiz list (teacher)
+```
 
-**New/edited files (~12):**
-- `src/routes/_authenticated/welcome.tsx` (new)
-- `src/routes/u.$userId.tsx` (new)
-- `src/lib/api/personalization.functions.ts` (new)
-- `src/lib/api/social.functions.ts` (new — follow/unfollow, get profile)
-- `src/lib/api/stats.functions.ts` (new — read XP/streak)
-- Edits: `_authenticated/route.tsx`, `dashboard.tsx`, `site-nav.tsx`, `careers.tsx`, `innovate.tsx`, `innovate.$projectSlug.tsx`, `lessons.$lessonId.tsx`, `quizzes.$quizId.tsx`, `mentor.tsx`.
+### Server functions
 
-**Out of scope this pass:** email digests, push notifications, employer accounts, mentorship matching, live events, leaderboards, referrals, interview-prep AI, video lessons, real-time collab. Flag these for a future iteration.
+```text
+src/lib/api/admin.functions.ts
+```
 
-Approve and I'll ship it in build mode.
+Includes:
+- `getAdminStats()` — counts of users, courses, opportunities, projects, applications, discussions, challenge submissions
+- `listUsers()` — paginated users with their roles
+- `updateUserRole()` — add/remove roles safely
+- `listContentForModeration()` — flagged/new projects and discussions
+- `moderateContent()` — approve/hide/delete a project or discussion
+- `listOpportunitiesAdmin()` — all opportunities with application counts
+- `updateApplicationStatus()` — move applications through the pipeline
+- `listCoursesAdmin()` — all courses with lesson/quiz counts
+
+## UI outline
+
+- **Layout**: a two-column shell with a sticky sidebar on desktop and a mobile drawer. The sidebar only shows items the current role can access.
+- **Dashboard**: stat cards (e.g. "1,240 users", "32 active opportunities", "87 applications this week"), recent sign-ups, and quick action buttons.
+- **Users**: searchable table, role badges, role add/remove buttons (admin only).
+- **Content**: tabs for projects and discussions; approve/hide/delete actions.
+- **Opportunities**: table of opportunities with application count, status, and an expandable list of applications with status update buttons.
+- **Courses**: read-only list for teachers with edit links to the existing lesson/quiz routes.
+
+## Navigation
+
+- Add an "Admin" link to the user menu in `site-nav.tsx` for anyone with an admin/moderator/teacher/partner role.
+- Hide the link from regular learners.
+
+## Out of scope
+
+- Full CRUD for courses/lessons/quizzes (teachers can edit through existing routes for now).
+- Partner-specific opportunity ownership (partner sees all opportunities until the schema supports `posted_by`).
+- Advanced analytics/charts (stats are numbers + tables).
+- Email notifications for admin actions.
+
+Approve and I'll ship it in one pass.
