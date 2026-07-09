@@ -85,7 +85,7 @@ export const listUsers = createServerFn({ method: "POST" })
     let query = admin.from("profiles").select("*", { count: "exact" });
     if (data.search?.trim()) {
       const term = data.search.trim();
-      query = query.or(`display_name.ilike.%${term}%,email.ilike.%${term}%`);
+      query = query.ilike("display_name", `%${term}%`);
     }
 
     const { data: profiles, error, count } = await query.range(from, to).order("created_at", { ascending: false });
