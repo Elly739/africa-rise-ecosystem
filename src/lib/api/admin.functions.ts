@@ -253,3 +253,162 @@ export const listCoursesAdmin = createServerFn({ method: "GET" })
 
     return { courses: courses ?? [] };
   });
+
+// ============ Role requests (option A) ============
+
+const REQUESTABLE_ROLES: AppRole[] = ["teacher", "moderator", "partner"];
+
+export const requestRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { role: AppRole; note?: string }) => {
+    if (!REQUESTABLE_ROLES.includes(data.role)) throw new Error("Invalid role");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: existing } = await supabase
+      .from("role_requests")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("requested_role", data.role)
+      .eq("status", "pending")
+      .maybeSingle();
+    if (existing) return { ok: true, alreadyPending: true };
+    const { error } = await supabase
+      .from("role_requests")
+      .insert({ user_id: userId, requested_role: data.role, note: data.note ?? null });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const listMyRoleRequests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("role_requests")
+      .select("id, requested_role, note, status, created_at, reviewed_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return { requests: data ?? [] };
+  });
+
+export const listRoleRequests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+    const { data, error } = await admin
+      .from("role_requests")
+      .select("id, user_id, requested_role, note, status, created_at, reviewed_at, profiles:user_id(display_name, avatar_url)")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return { requests: data ?? [] };
+  });
+
+export const reviewRoleRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string; approve: boolean }) => data)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+    const { data: req, error: fetchErr } = await admin
+      .from("role_requests").select("user_id, requested_role, status").eq("id", data.id).single();
+    if (fetchErr) throw fetchErr;
+    if (req.status !== "pending") throw new Error("Request already reviewed");
+    if (data.approve) {
+      const { error } = await admin.from("user_roles").insert({ user_id: req.user_id, role: req.requested_role });
+      if (error && !String(error.message).includes("duplicate")) throw error;
+    }
+    const { error: updErr } = await admin
+      .from("role_requests")
+      .update({ status: data.approve ? "approved" : "rejected", reviewed_by: userId, reviewed_at: new Date().toISOString() })
+      .eq("id", data.id);
+    if (updErr) throw updErr;
+    return { ok: true };
+  });
+
+// ============ Role invites (option C) ============
+
+export const createRoleInvite = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { role: AppRole; email?: string; expiresInDays?: number }) => {
+    if (!["teacher", "moderator", "partner"].includes(data.role)) throw new Error("Invalid role");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const token = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
+    const days = Math.max(1, Math.min(365, data.expiresInDays ?? 30));
+    const expiresAt = new Date(Date.now() + days * 86_400_000).toISOString();
+    const { data: invite, error } = await supabase
+      .from("role_invites")
+      .insert({ token, role: data.role, email: data.email?.toLowerCase() ?? null, expires_at: expiresAt, created_by: userId })
+      .select("id, token, role, email, expires_at, created_at")
+      .single();
+    if (error) throw error;
+    return { invite };
+  });
+
+export const listRoleInvites = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+    const { data, error } = await admin
+      .from("role_invites")
+      .select("id, token, role, email, expires_at, created_at, used_by, used_at, profiles:used_by(display_name)")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return { invites: data ?? [] };
+  });
+
+export const deleteRoleInvite = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const { error } = await supabase.from("role_invites").delete().eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const redeemRoleInvite = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { token: string }) => data)
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
+    const admin = await loadAdmin();
+
+    const { data: invite, error } = await admin
+      .from("role_invites")
+      .select("id, role, email, expires_at, used_by")
+      .eq("token", data.token)
+      .maybeSingle();
+    if (error) throw error;
+    if (!invite) throw new Error("Invite not found");
+    if (invite.used_by) throw new Error("Invite already used");
+    if (new Date(invite.expires_at) < new Date()) throw new Error("Invite expired");
+
+    if (invite.email) {
+      const { data: me } = await admin.auth.admin.getUserById(userId);
+      if (me?.user?.email?.toLowerCase() !== invite.email.toLowerCase()) {
+        throw new Error("This invite is reserved for another email address");
+      }
+    }
+
+    const { error: roleErr } = await admin.from("user_roles").insert({ user_id: userId, role: invite.role });
+    if (roleErr && !String(roleErr.message).includes("duplicate")) throw roleErr;
+
+    await admin.from("role_invites").update({ used_by: userId, used_at: new Date().toISOString() }).eq("id", invite.id);
+    return { ok: true, role: invite.role };
+  });
+

@@ -180,6 +180,11 @@ function AuthPage() {
               {mode === "signup" ? "Sign in" : "Create one"}
             </button>
           </p>
+          {mode === "signup" && (
+            <p className="text-xs text-brand-navy/50 text-center">
+              Everyone starts as a learner. Teachers, partners, and moderators can request access from their dashboard after signing in — or use an invite link if you have one.
+            </p>
+          )}
         </div>
       </div>
     </div>
