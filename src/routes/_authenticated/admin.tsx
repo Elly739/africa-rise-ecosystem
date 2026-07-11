@@ -45,6 +45,8 @@ function AdminNotFound() {
 const navItems = [
   { to: "/admin" as const, label: "Dashboard", roles: ["admin", "moderator", "teacher", "partner"] },
   { to: "/admin/users" as const, label: "Users", roles: ["admin"] },
+  { to: "/admin/requests" as const, label: "Role requests", roles: ["admin"] },
+  { to: "/admin/invites" as const, label: "Invites", roles: ["admin"] },
   { to: "/admin/content" as const, label: "Content", roles: ["admin", "moderator"] },
   { to: "/admin/opportunities" as const, label: "Opportunities", roles: ["admin", "partner"] },
   { to: "/admin/courses" as const, label: "Courses", roles: ["admin", "teacher"] },
