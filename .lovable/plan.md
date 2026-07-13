@@ -1,80 +1,71 @@
-# Admin Dashboard — Quick Win Plan
+## Goals
 
-Add a role-based admin area at `/admin` so you (and future moderators, teachers, and partners) can manage the platform without touching the backend.
+1. Email notifications for role requests & invites (Lovable Emails).
+2. Role-differentiated dashboards (Student / Teacher / Partner / Admin) with the right features and polished UI.
+3. Admin gets more oversight tools.
+4. Add a project README.
 
-## What we are building
+---
 
-A single admin hub with a sidebar that adapts to the user's role. The current app already has a `user_roles` table and a `has_role` helper, so we will extend the role enum and build a lightweight UI on top.
+## 1. Email notifications
 
-### Roles and permissions
+Use Lovable's built-in email system (needs a verified email domain — I'll trigger the setup dialog first if none exists).
 
-| Role | Access |
-|------|--------|
-| **admin** | Everything: stats, users, roles, all content, opportunities, applications |
-| **moderator** | Content moderation: projects, discussions, community reports |
-| **teacher** | Course/lesson/quiz content: view and edit learning content |
-| **partner** | Opportunities they posted + applications to those opportunities |
+Auto-sent app emails:
+- **Role request submitted** → confirmation to the applicant ("We got your request, we'll review it")
+- **Role request approved / rejected** → notice to the applicant with next steps
+- **Admin alert** → `iamellyokello@gmail.com` gets an email whenever a new role request is submitted
+- **Invite created** → email to the invitee (when an email is specified on the invite) with the redemption link
+- **Invite redeemed** → notice to admin
 
-Because the current `opportunities` table does not have a `posted_by` column, the partner view will start as read-only access to all opportunities and applications. A future iteration can scope partner access to their own postings.
+Templates: `role-request-received`, `role-request-decision`, `role-request-admin-alert`, `role-invite`, `role-invite-redeemed`. All branded with SkillBridge Africa styling.
 
-## Database change
+Server hooks: fire these from the existing `requestRole`, `reviewRoleRequest`, `createRoleInvite`, `redeemRoleInvite` server functions.
 
-Extend the existing `app_role` enum to include the new roles.
+---
 
-```sql
-ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'moderator';
-ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'teacher';
-ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'partner';
-```
+## 2. Dashboards per role
 
-## New files
+Currently everyone hits `/dashboard` (the learner view). I'll:
 
-### Routes
+- Detect roles at load and, for privileged users, show a **role switcher / quick-action band** at the top of `/dashboard` with links into their specialised area — the general learner content stays visible below so teachers/partners keep access to their own learning.
+- Give each privileged role its own workspace under `/admin/*` (already scoped by role in the sidebar) with new, dedicated landing content:
 
-```text
-src/routes/_authenticated/_admin.tsx              # layout + RBAC gate
-src/routes/_authenticated/_admin/dashboard.tsx    # stats + quick actions
-src/routes/_authenticated/_admin/users.tsx          # user list + role assignment
-src/routes/_authenticated/_admin/content.tsx        # projects + discussions moderation
-src/routes/_authenticated/_admin/opportunities.tsx  # opportunities + applications
-src/routes/_authenticated/_admin/courses.tsx        # course/lesson/quiz list (teacher)
-```
+**Teacher workspace** (`/admin/courses` + new `/admin/teacher`)
+- My courses list, "Create course" CTA (stub route → notice), enrolments per course, quiz pass rates, recent learner progress.
 
-### Server functions
+**Partner workspace** (`/admin/opportunities` + new `/admin/partner`)
+- My posted opportunities, applications inbox with quick status updates, "Post opportunity" CTA.
 
-```text
-src/lib/api/admin.functions.ts
-```
+**Admin workspace** (enhancements to `/admin`)
+- New **Announcements** feature: admin posts an in-app notification broadcast to all users (or a role subset). Table `announcements` + fan-out via existing `notifications`.
+- Dashboard tiles: pending role requests count, unreviewed submissions, open opportunities, active users this week.
+- Quick actions row (approve pending, create invite, post announcement).
 
-Includes:
-- `getAdminStats()` — counts of users, courses, opportunities, projects, applications, discussions, challenge submissions
-- `listUsers()` — paginated users with their roles
-- `updateUserRole()` — add/remove roles safely
-- `listContentForModeration()` — flagged/new projects and discussions
-- `moderateContent()` — approve/hide/delete a project or discussion
-- `listOpportunitiesAdmin()` — all opportunities with application counts
-- `updateApplicationStatus()` — move applications through the pipeline
-- `listCoursesAdmin()` — all courses with lesson/quiz counts
+**Student (default)** — unchanged content but the top band shows "Request teacher/partner access" only if they have no privileged roles.
 
-## UI outline
+---
 
-- **Layout**: a two-column shell with a sticky sidebar on desktop and a mobile drawer. The sidebar only shows items the current role can access.
-- **Dashboard**: stat cards (e.g. "1,240 users", "32 active opportunities", "87 applications this week"), recent sign-ups, and quick action buttons.
-- **Users**: searchable table, role badges, role add/remove buttons (admin only).
-- **Content**: tabs for projects and discussions; approve/hide/delete actions.
-- **Opportunities**: table of opportunities with application count, status, and an expandable list of applications with status update buttons.
-- **Courses**: read-only list for teachers with edit links to the existing lesson/quiz routes.
+## 3. UI polish
 
-## Navigation
+- Consistent card styles across `/admin/*` (rounded-2xl, subtle border, brand tokens — no ad-hoc colors).
+- Stat tiles with icons + trendless numbers (real data from server fn).
+- Empty states with friendly copy + CTA.
+- Mobile: admin sidebar drawer already exists; verify layouts collapse cleanly.
 
-- Add an "Admin" link to the user menu in `site-nav.tsx` for anyone with an admin/moderator/teacher/partner role.
-- Hide the link from regular learners.
+---
 
-## Out of scope
+## 4. README.md
 
-- Full CRUD for courses/lessons/quizzes (teachers can edit through existing routes for now).
-- Partner-specific opportunity ownership (partner sees all opportunities until the schema supports `posted_by`).
-- Advanced analytics/charts (stats are numbers + tables).
-- Email notifications for admin actions.
+Project-root README covering: what SkillBridge Africa is, feature list, tech stack (TanStack Start, Lovable Cloud, Tailwind v4), local dev (`bun install`, `bun run dev`), role model & admin lockdown, contribution notes, and deploy.
 
-Approve and I'll ship it in one pass.
+---
+
+## Technical notes
+
+- **DB migration**: `announcements` table (title, body, link, target_roles[], created_by, created_at) with RLS + GRANTs + a helper server fn that fan-outs into `notifications`.
+- **Email infra**: call `email_domain--check_email_domain_status`; if no domain, show setup dialog and stop until user completes it, then continue.
+- **Templates**: React Email tsx under `src/lib/email-templates/`, registered in `registry.ts`.
+- **Send helper**: reuse scaffolded `/lovable/email/transactional/send` with `idempotencyKey` derived from `request.id` + event.
+
+Sound good? I'll ship it all in one pass after you confirm.
