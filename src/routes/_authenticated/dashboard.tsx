@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { getDashboard } from "@/lib/api/learn.functions";
 import { getForYou } from "@/lib/api/personalization.functions";
 import { SiteNav } from "@/components/site-nav";
@@ -10,6 +12,10 @@ import innovateImg from "@/assets/module-innovate.jpg";
 import communityImg from "@/assets/module-community.jpg";
 import mentorImg from "@/assets/module-mentor.jpg";
 import challengesImg from "@/assets/module-challenges.jpg";
+import type { Database } from "@/integrations/supabase/types";
+
+type AppRole = Database["public"]["Enums"]["app_role"];
+const PRIVILEGED: AppRole[] = ["admin", "moderator", "teacher", "partner"];
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · SkillBridge Africa" }] }),
