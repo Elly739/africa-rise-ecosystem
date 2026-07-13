@@ -73,6 +73,36 @@ export type Database = {
           },
         ]
       }
+      announcements: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string
+          id: string
+          link: string | null
+          target_roles: Database["public"]["Enums"]["app_role"][] | null
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by: string
+          id?: string
+          link?: string | null
+          target_roles?: Database["public"]["Enums"]["app_role"][] | null
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          link?: string | null
+          target_roles?: Database["public"]["Enums"]["app_role"][] | null
+          title?: string
+        }
+        Relationships: []
+      }
       applications: {
         Row: {
           created_at: string
@@ -1021,6 +1051,10 @@ export type Database = {
       award_xp: {
         Args: { _amount: number; _user_id: string }
         Returns: undefined
+      }
+      fanout_announcement: {
+        Args: { _announcement_id: string }
+        Returns: number
       }
       has_community_activity: { Args: { _user_id: string }; Returns: boolean }
       has_role: {

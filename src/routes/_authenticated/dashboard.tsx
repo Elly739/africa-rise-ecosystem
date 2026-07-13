@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { getDashboard } from "@/lib/api/learn.functions";
 import { getForYou } from "@/lib/api/personalization.functions";
 import { SiteNav } from "@/components/site-nav";
@@ -10,6 +12,10 @@ import innovateImg from "@/assets/module-innovate.jpg";
 import communityImg from "@/assets/module-community.jpg";
 import mentorImg from "@/assets/module-mentor.jpg";
 import challengesImg from "@/assets/module-challenges.jpg";
+import type { Database } from "@/integrations/supabase/types";
+
+type AppRole = Database["public"]["Enums"]["app_role"];
+const PRIVILEGED: AppRole[] = ["admin", "moderator", "teacher", "partner"];
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · SkillBridge Africa" }] }),
@@ -22,6 +28,19 @@ function Dashboard() {
   const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fn() });
   const { data: forYou } = useQuery({ queryKey: ["for-you"], queryFn: () => forYouFn() });
 
+  const [roles, setRoles] = useState<AppRole[]>([]);
+  useEffect(() => {
+    (async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session) return;
+      const { data: r } = await supabase.from("user_roles").select("role").eq("user_id", session.session.user.id);
+      setRoles((r ?? []).map((row) => row.role as AppRole));
+    })();
+  }, []);
+
+  const privileged = roles.filter((r) => PRIVILEGED.includes(r));
+  const isStudentOnly = roles.length > 0 && privileged.length === 0;
+
   return (
     <div className="min-h-dvh bg-brand-bg text-brand-navy">
       <SiteNav />
@@ -33,6 +52,33 @@ function Dashboard() {
           </h1>
           <p className="text-brand-navy/70 text-sm sm:text-base">Keep your momentum — your future self will thank you.</p>
         </header>
+
+        {privileged.length > 0 && (
+          <aside className="rounded-3xl bg-brand-navy text-white p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">Your roles</p>
+              <p className="font-display text-lg sm:text-xl font-bold mt-1 capitalize">{privileged.join(" · ")}</p>
+              <p className="text-sm text-white/70 mt-1">Jump into your workspace to manage what you own.</p>
+            </div>
+            <Link to="/admin" className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-brand-orange text-white font-semibold shrink-0">
+              Open workspace →
+            </Link>
+          </aside>
+        )}
+
+        {isStudentOnly && (
+          <aside className="rounded-3xl border border-dashed border-brand-navy/15 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-brand-orange">Want to contribute?</p>
+              <p className="font-display font-bold mt-1">Apply to teach, post opportunities, or moderate.</p>
+              <p className="text-sm text-brand-navy/60 mt-1">Have an invite link instead? Open it to activate access instantly.</p>
+            </div>
+            <Link to="/request-access" className="inline-flex px-5 py-2.5 rounded-full bg-brand-navy text-white font-semibold text-sm shrink-0">
+              Request access
+            </Link>
+          </aside>
+        )}
+
 
         {/* Ecosystem quick-jump */}
         <section aria-labelledby="ecosystem-heading">
