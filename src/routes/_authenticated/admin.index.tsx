@@ -31,7 +31,7 @@ function AdminDashboard() {
   return (
     <div className="space-y-8">
       <header className="rounded-3xl bg-gradient-to-br from-brand-navy to-brand-navy/80 text-white p-6 sm:p-8">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-brand-mint">{roles.map((r) => r).join(" · ")}</p>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-brand-mint">{roles.map((r: string) => r).join(" · ")}</p>
         <h1 className="font-display text-2xl sm:text-3xl font-bold mt-1">{roleTitle}</h1>
         <p className="text-sm text-white/70 mt-2 max-w-2xl">Welcome back. Here's what needs your attention today.</p>
       </header>
