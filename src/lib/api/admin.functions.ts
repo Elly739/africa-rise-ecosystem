@@ -412,3 +412,131 @@ export const redeemRoleInvite = createServerFn({ method: "POST" })
     return { ok: true, role: invite.role };
   });
 
+// ============ Announcements ============
+
+export const listAnnouncements = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const { data, error } = await supabase
+      .from("announcements")
+      .select("id, title, body, link, target_roles, created_at, created_by, profiles:created_by(display_name)")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    return { announcements: data ?? [] };
+  });
+
+export const createAnnouncement = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { title: string; body: string; link?: string; targetRoles?: AppRole[] }) => {
+    if (!data.title?.trim() || !data.body?.trim()) throw new Error("Title and body are required");
+    if (data.title.length > 140) throw new Error("Title too long");
+    if (data.body.length > 2000) throw new Error("Body too long");
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+
+    const targetRoles = data.targetRoles && data.targetRoles.length > 0 ? data.targetRoles : null;
+    const { data: created, error } = await admin
+      .from("announcements")
+      .insert({
+        title: data.title.trim(),
+        body: data.body.trim(),
+        link: data.link?.trim() || null,
+        target_roles: targetRoles,
+        created_by: userId,
+      })
+      .select("id")
+      .single();
+    if (error) throw error;
+
+    const { data: fanout, error: fanoutErr } = await admin.rpc("fanout_announcement", { _announcement_id: created.id });
+    if (fanoutErr) throw fanoutErr;
+    return { ok: true, id: created.id, notified: fanout ?? 0 };
+  });
+
+export const deleteAnnouncement = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+    const { error } = await admin.from("announcements").delete().eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// Teacher workspace summary
+export const getTeacherWorkspace = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin", "teacher"]);
+    const admin = await loadAdmin();
+
+    const [{ count: totalCourses }, { count: totalLessons }, { count: totalEnrollments }, { count: passedQuizzes }] = await Promise.all([
+      admin.from("courses").select("*", { count: "exact", head: true }),
+      admin.from("lessons").select("*", { count: "exact", head: true }),
+      admin.from("enrollments").select("*", { count: "exact", head: true }),
+      admin.from("quiz_attempts").select("*", { count: "exact", head: true }).eq("passed", true),
+    ]);
+
+    return {
+      totalCourses: totalCourses ?? 0,
+      totalLessons: totalLessons ?? 0,
+      totalEnrollments: totalEnrollments ?? 0,
+      passedQuizzes: passedQuizzes ?? 0,
+    };
+  });
+
+// Partner workspace summary
+export const getPartnerWorkspace = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin", "partner"]);
+    const admin = await loadAdmin();
+
+    const [{ count: opportunities }, { count: pending }, { count: interview }, { count: offer }] = await Promise.all([
+      admin.from("opportunities").select("*", { count: "exact", head: true }),
+      admin.from("applications").select("*", { count: "exact", head: true }).eq("status", "submitted"),
+      admin.from("applications").select("*", { count: "exact", head: true }).eq("status", "interview"),
+      admin.from("applications").select("*", { count: "exact", head: true }).eq("status", "offer"),
+    ]);
+
+    return {
+      opportunities: opportunities ?? 0,
+      pendingApplications: pending ?? 0,
+      interviews: interview ?? 0,
+      offers: offer ?? 0,
+    };
+  });
+
+// Admin overview: pending queues
+export const getAdminOverview = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await assertAnyRole(supabase, userId, ["admin"]);
+    const admin = await loadAdmin();
+
+    const [{ count: pendingRequests }, { count: activeInvites }, { count: pendingApps }, { data: recentAnnouncements }] = await Promise.all([
+      admin.from("role_requests").select("*", { count: "exact", head: true }).eq("status", "pending"),
+      admin.from("role_invites").select("*", { count: "exact", head: true }).is("used_by", null),
+      admin.from("applications").select("*", { count: "exact", head: true }).eq("status", "submitted"),
+      admin.from("announcements").select("id, title, created_at").order("created_at", { ascending: false }).limit(3),
+    ]);
+
+    return {
+      pendingRoleRequests: pendingRequests ?? 0,
+      activeInvites: activeInvites ?? 0,
+      pendingApplications: pendingApps ?? 0,
+      recentAnnouncements: recentAnnouncements ?? [],
+    };
+  });
+
