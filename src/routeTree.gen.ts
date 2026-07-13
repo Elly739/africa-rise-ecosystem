@@ -44,6 +44,7 @@ import { Route as AuthenticatedAdminOpportunitiesRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminInvitesRouteImport } from './routes/_authenticated/admin.invites'
 import { Route as AuthenticatedAdminCoursesRouteImport } from './routes/_authenticated/admin.courses'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
+import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin.announcements'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const McpRoute = McpRouteImport.update({
@@ -233,6 +234,12 @@ const AuthenticatedAdminContentRoute =
     path: '/content',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAnnouncementsRoute =
+  AuthenticatedAdminAnnouncementsRouteImport.update({
+    id: '/announcements',
+    path: '/announcements',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -266,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/u/$userId': typeof UUserIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
@@ -302,6 +310,7 @@ export interface FileRoutesByTo {
   '/u/$userId': typeof UUserIdRoute
   '/courses': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/admin/content': typeof AuthenticatedAdminContentRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesRoute
   '/admin/invites': typeof AuthenticatedAdminInvitesRoute
@@ -341,6 +350,7 @@ export interface FileRoutesById {
   '/u/$userId': typeof UUserIdRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRoute
   '/_authenticated/admin/courses': typeof AuthenticatedAdminCoursesRoute
   '/_authenticated/admin/invites': typeof AuthenticatedAdminInvitesRoute
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/u/$userId'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/announcements'
     | '/admin/content'
     | '/admin/courses'
     | '/admin/invites'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/u/$userId'
     | '/courses'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/announcements'
     | '/admin/content'
     | '/admin/courses'
     | '/admin/invites'
@@ -454,6 +466,7 @@ export interface FileRouteTypes {
     | '/u/$userId'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/announcements'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/courses'
     | '/_authenticated/admin/invites'
@@ -730,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/announcements': {
+      id: '/_authenticated/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AuthenticatedAdminAnnouncementsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -741,6 +761,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAnnouncementsRoute: typeof AuthenticatedAdminAnnouncementsRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRoute
   AuthenticatedAdminCoursesRoute: typeof AuthenticatedAdminCoursesRoute
   AuthenticatedAdminInvitesRoute: typeof AuthenticatedAdminInvitesRoute
@@ -751,6 +772,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAnnouncementsRoute: AuthenticatedAdminAnnouncementsRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRoute,
   AuthenticatedAdminCoursesRoute: AuthenticatedAdminCoursesRoute,
   AuthenticatedAdminInvitesRoute: AuthenticatedAdminInvitesRoute,
