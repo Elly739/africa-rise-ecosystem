@@ -3,6 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listCourses } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { Reveal } from "@/components/reveal";
 import heroCutout from "@/assets/hero-cutout.png";
 import learnImg from "@/assets/module-learn.jpg";
 import careersImg from "@/assets/module-careers.jpg";
