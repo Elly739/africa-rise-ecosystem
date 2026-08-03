@@ -44,55 +44,98 @@ function Landing() {
       <SiteNav />
 
       {/* Hero */}
-      <header className="px-6 pt-12 pb-20 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-8">
-          <div className="inline-block px-3 py-1 bg-brand-mint/20 text-brand-mint border border-brand-mint/30 rounded-full text-xs font-bold uppercase tracking-wider">
-            Beta · Launching across Africa
-          </div>
-          <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-balance">
-            Bridging the gap between <span className="text-brand-orange">learning</span> and opportunity.
-          </h1>
-          <p className="text-lg md:text-xl text-brand-navy/70 max-w-lg">
-            A digital growth ecosystem empowering the next generation of African innovators with industry-ready skills and direct career pathways.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/courses"
-              className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white rounded-2xl font-bold text-lg hover:scale-[1.02] transition-transform"
-            >
-              Explore Courses
-            </Link>
-            <Link
-              to="/auth"
-              search={{ mode: "signup" }}
-              className="inline-flex items-center justify-center px-8 py-4 bg-brand-clay text-brand-navy rounded-2xl font-bold text-lg border border-brand-navy/5 hover:bg-brand-clay/80 transition-all"
-            >
-              Join the Community
-            </Link>
-          </div>
+      <header className="relative overflow-hidden">
+        {/* decorative shape layer */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
+          <div className="sb-float-slow absolute -top-24 -left-24 size-[26rem] rounded-full bg-brand-mint/15 blur-2xl" />
+          <div className="sb-float absolute top-32 right-[8%] size-40 rounded-full bg-brand-orange/15 blur-xl" />
+          <div className="sb-dots absolute bottom-10 left-[4%] h-32 w-40 text-brand-navy/15" />
+          <div className="sb-dots absolute top-8 right-[38%] h-24 w-28 text-brand-orange/30" />
+          <svg className="sb-spin-slow absolute -bottom-20 right-[-4rem] size-72 text-brand-navy/10" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+            <circle cx="50" cy="50" r="48" strokeDasharray="6 8" />
+            <circle cx="50" cy="50" r="34" strokeDasharray="3 10" />
+          </svg>
         </div>
-        <div className="relative">
-          <div className="w-full aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl shadow-brand-navy/10 outline outline-1 outline-black/5 -outline-offset-1 bg-brand-clay">
+
+        <div className="relative px-6 pt-12 pb-20 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8 sb-rise">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-mint/20 text-brand-mint border border-brand-mint/30 rounded-full text-xs font-bold uppercase tracking-wider">
+              <span className="relative flex size-2">
+                <span className="sb-ring absolute inline-flex size-full rounded-full bg-brand-mint" />
+                <span className="relative inline-flex size-2 rounded-full bg-brand-mint" />
+              </span>
+              Beta · Launching across Africa
+            </div>
+            <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-balance">
+              Bridging the gap between <span className="text-brand-orange">learning</span> and opportunity.
+            </h1>
+            <p className="text-lg md:text-xl text-brand-navy/70 max-w-lg">
+              A digital growth ecosystem empowering the next generation of African innovators with industry-ready skills and direct career pathways.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/courses"
+                className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white rounded-2xl font-bold text-lg hover:scale-[1.02] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+              >
+                Explore Courses
+              </Link>
+              <Link
+                to="/auth"
+                search={{ mode: "signup" }}
+                className="inline-flex items-center justify-center px-8 py-4 text-brand-navy rounded-2xl font-bold text-lg border-2 border-brand-navy/15 hover:border-brand-navy/40 hover:bg-brand-clay/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+              >
+                Join the Community
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative flex justify-center items-end min-h-[26rem]">
+            {/* flat shape behind the cut-out */}
+            <div aria-hidden className="absolute bottom-8 left-1/2 -translate-x-1/2 size-[22rem] md:size-[26rem] rounded-full bg-brand-orange/90" />
+            <div aria-hidden className="sb-spin-slow absolute bottom-4 left-1/2 -translate-x-1/2 size-[25rem] md:size-[30rem] rounded-full border-2 border-dashed border-brand-navy/15" />
             <img
-              src={heroImage}
-              alt="A young African student working on a laptop in a modern co-working space"
+              src={heroCutout}
+              alt="A young African student holding a laptop, ready to start learning"
               width={1024}
               height={1280}
-              className="w-full h-full object-cover"
+              className="relative z-10 w-[19rem] md:w-[24rem] drop-shadow-2xl"
             />
+
+            <div className="sb-float absolute z-20 top-4 left-0 md:left-4 bg-white p-4 rounded-2xl shadow-xl border border-brand-clay max-w-[220px]">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="size-2.5 bg-brand-mint rounded-full animate-pulse" />
+                <span className="text-[10px] font-bold text-brand-navy/50 uppercase tracking-wider">Live now</span>
+              </div>
+              <p className="text-sm font-semibold leading-snug">Digital Product Design Foundations</p>
+              <div className="mt-3 h-1.5 w-full bg-brand-clay rounded-full overflow-hidden">
+                <div className="h-full bg-brand-orange w-3/4" />
+              </div>
+            </div>
+
+            <div className="sb-float-slow absolute z-20 bottom-16 right-0 bg-brand-navy text-white px-4 py-3 rounded-2xl shadow-xl">
+              <p className="text-2xl font-display font-bold leading-none">+12k</p>
+              <p className="text-[10px] uppercase tracking-wider text-white/60 mt-1">Learners onboard</p>
+            </div>
           </div>
-          <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl border border-brand-clay max-w-[260px]">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="size-3 bg-brand-mint rounded-full animate-pulse"></div>
-              <span className="text-xs font-bold text-brand-navy/40 uppercase tracking-wider">Live now</span>
-            </div>
-            <p className="font-semibold leading-snug">Digital Product Design Foundations</p>
-            <div className="mt-4 h-1.5 w-full bg-brand-clay rounded-full overflow-hidden">
-              <div className="h-full bg-brand-orange w-3/4"></div>
-            </div>
+        </div>
+
+        {/* Moving ticker */}
+        <div className="relative border-y border-brand-navy/10 bg-brand-navy text-white py-3 overflow-hidden">
+          <div className="sb-marquee flex w-max gap-10 whitespace-nowrap">
+            {[0, 1].map((dup) => (
+              <div key={dup} className="flex gap-10" aria-hidden={dup === 1}>
+                {["Web Development", "Data Science", "UI/UX Design", "Cloud & DevOps", "Blockchain", "Product Management", "Cybersecurity", "AI & Machine Learning"].map((t) => (
+                  <span key={t} className="flex items-center gap-10 text-sm font-bold uppercase tracking-widest text-white/80">
+                    {t}
+                    <span className="size-1.5 rounded-full bg-brand-orange" />
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </header>
+
 
       {/* Learn module */}
       <section className="bg-brand-navy text-white py-24 px-6">
