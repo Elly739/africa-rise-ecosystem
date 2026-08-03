@@ -3,7 +3,8 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listCourses } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import heroImage from "@/assets/hero-student.jpg";
+import { Reveal } from "@/components/reveal";
+import heroCutout from "@/assets/hero-cutout.png";
 import learnImg from "@/assets/module-learn.jpg";
 import careersImg from "@/assets/module-careers.jpg";
 import innovateImg from "@/assets/module-innovate.jpg";
@@ -44,55 +45,98 @@ function Landing() {
       <SiteNav />
 
       {/* Hero */}
-      <header className="px-6 pt-12 pb-20 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-8">
-          <div className="inline-block px-3 py-1 bg-brand-mint/20 text-brand-mint border border-brand-mint/30 rounded-full text-xs font-bold uppercase tracking-wider">
-            Beta · Launching across Africa
-          </div>
-          <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-balance">
-            Bridging the gap between <span className="text-brand-orange">learning</span> and opportunity.
-          </h1>
-          <p className="text-lg md:text-xl text-brand-navy/70 max-w-lg">
-            A digital growth ecosystem empowering the next generation of African innovators with industry-ready skills and direct career pathways.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/courses"
-              className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white rounded-2xl font-bold text-lg hover:scale-[1.02] transition-transform"
-            >
-              Explore Courses
-            </Link>
-            <Link
-              to="/auth"
-              search={{ mode: "signup" }}
-              className="inline-flex items-center justify-center px-8 py-4 bg-brand-clay text-brand-navy rounded-2xl font-bold text-lg border border-brand-navy/5 hover:bg-brand-clay/80 transition-all"
-            >
-              Join the Community
-            </Link>
-          </div>
+      <header className="relative overflow-hidden">
+        {/* decorative shape layer */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
+          <div className="sb-float-slow absolute -top-24 -left-24 size-[26rem] rounded-full bg-brand-mint/15 blur-2xl" />
+          <div className="sb-float absolute top-32 right-[8%] size-40 rounded-full bg-brand-orange/15 blur-xl" />
+          <div className="sb-dots absolute bottom-10 left-[4%] h-32 w-40 text-brand-navy/15" />
+          <div className="sb-dots absolute top-8 right-[38%] h-24 w-28 text-brand-orange/30" />
+          <svg className="sb-spin-slow absolute -bottom-20 right-[-4rem] size-72 text-brand-navy/10" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+            <circle cx="50" cy="50" r="48" strokeDasharray="6 8" />
+            <circle cx="50" cy="50" r="34" strokeDasharray="3 10" />
+          </svg>
         </div>
-        <div className="relative">
-          <div className="w-full aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl shadow-brand-navy/10 outline outline-1 outline-black/5 -outline-offset-1 bg-brand-clay">
+
+        <div className="relative px-6 pt-12 pb-20 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8 sb-rise">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-mint/20 text-brand-mint border border-brand-mint/30 rounded-full text-xs font-bold uppercase tracking-wider">
+              <span className="relative flex size-2">
+                <span className="sb-ring absolute inline-flex size-full rounded-full bg-brand-mint" />
+                <span className="relative inline-flex size-2 rounded-full bg-brand-mint" />
+              </span>
+              Beta · Launching across Africa
+            </div>
+            <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-balance">
+              Bridging the gap between <span className="text-brand-orange">learning</span> and opportunity.
+            </h1>
+            <p className="text-lg md:text-xl text-brand-navy/70 max-w-lg">
+              A digital growth ecosystem empowering the next generation of African innovators with industry-ready skills and direct career pathways.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/courses"
+                className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white rounded-2xl font-bold text-lg hover:scale-[1.02] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+              >
+                Explore Courses
+              </Link>
+              <Link
+                to="/auth"
+                search={{ mode: "signup" }}
+                className="inline-flex items-center justify-center px-8 py-4 text-brand-navy rounded-2xl font-bold text-lg border-2 border-brand-navy/15 hover:border-brand-navy/40 hover:bg-brand-clay/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+              >
+                Join the Community
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative flex justify-center items-end min-h-[26rem]">
+            {/* flat shape behind the cut-out */}
+            <div aria-hidden className="absolute bottom-8 left-1/2 -translate-x-1/2 size-[22rem] md:size-[26rem] rounded-full bg-brand-orange/90" />
+            <div aria-hidden className="sb-spin-slow absolute bottom-4 left-1/2 -translate-x-1/2 size-[25rem] md:size-[30rem] rounded-full border-2 border-dashed border-brand-navy/15" />
             <img
-              src={heroImage}
-              alt="A young African student working on a laptop in a modern co-working space"
+              src={heroCutout}
+              alt="A young African student holding a laptop, ready to start learning"
               width={1024}
               height={1280}
-              className="w-full h-full object-cover"
+              className="relative z-10 w-[19rem] md:w-[24rem] drop-shadow-2xl"
             />
+
+            <div className="sb-float absolute z-20 top-4 left-0 md:left-4 bg-white p-4 rounded-2xl shadow-xl border border-brand-clay max-w-[220px]">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="size-2.5 bg-brand-mint rounded-full animate-pulse" />
+                <span className="text-[10px] font-bold text-brand-navy/50 uppercase tracking-wider">Live now</span>
+              </div>
+              <p className="text-sm font-semibold leading-snug">Digital Product Design Foundations</p>
+              <div className="mt-3 h-1.5 w-full bg-brand-clay rounded-full overflow-hidden">
+                <div className="h-full bg-brand-orange w-3/4" />
+              </div>
+            </div>
+
+            <div className="sb-float-slow absolute z-20 bottom-16 right-0 bg-brand-navy text-white px-4 py-3 rounded-2xl shadow-xl">
+              <p className="text-2xl font-display font-bold leading-none">+12k</p>
+              <p className="text-[10px] uppercase tracking-wider text-white/60 mt-1">Learners onboard</p>
+            </div>
           </div>
-          <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl border border-brand-clay max-w-[260px]">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="size-3 bg-brand-mint rounded-full animate-pulse"></div>
-              <span className="text-xs font-bold text-brand-navy/40 uppercase tracking-wider">Live now</span>
-            </div>
-            <p className="font-semibold leading-snug">Digital Product Design Foundations</p>
-            <div className="mt-4 h-1.5 w-full bg-brand-clay rounded-full overflow-hidden">
-              <div className="h-full bg-brand-orange w-3/4"></div>
-            </div>
+        </div>
+
+        {/* Moving ticker */}
+        <div className="relative border-y border-brand-navy/10 bg-brand-navy text-white py-3 overflow-hidden">
+          <div className="sb-marquee flex w-max gap-10 whitespace-nowrap">
+            {[0, 1].map((dup) => (
+              <div key={dup} className="flex gap-10" aria-hidden={dup === 1}>
+                {["Web Development", "Data Science", "UI/UX Design", "Cloud & DevOps", "Blockchain", "Product Management", "Cybersecurity", "AI & Machine Learning"].map((t) => (
+                  <span key={t} className="flex items-center gap-10 text-sm font-bold uppercase tracking-widest text-white/80">
+                    {t}
+                    <span className="size-1.5 rounded-full bg-brand-orange" />
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </header>
+
 
       {/* Learn module */}
       <section className="bg-brand-navy text-white py-24 px-6">
@@ -152,44 +196,54 @@ function Landing() {
       </section>
 
       {/* Ecosystem */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 className="font-display text-4xl font-bold mb-6">The full growth loop</h2>
-          <p className="text-brand-navy/60">
-            Learn → Build → Connect → Apply → Innovate → Repeat. Every layer of the ecosystem is live.
-          </p>
+      <section className="relative py-24 px-6 overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="sb-float-slow absolute top-20 -right-20 size-72 rounded-full bg-brand-mint/10 blur-2xl" />
+          <div className="sb-dots absolute top-40 left-[3%] h-28 w-28 text-brand-navy/10" />
         </div>
 
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {[
-            { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
-            { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
-            { img: innovateImg, label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, tag: "Step 03" },
-            { img: challengesImg, label: "Challenges", desc: "Compete in hackathons. Form teams. Win prizes.", to: "/challenges" as const, tag: "Step 04" },
-            { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
-            { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
-          ].map((p) => (
-            <li key={p.label}>
-              <Link
-                to={p.to}
-                {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
-                aria-label={`${p.label}: ${p.desc}`}
-                className="group block bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
-                  <img src={p.img} alt="" aria-hidden="true" loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-display font-bold text-lg">{p.label}</h3>
-                  <p className="text-sm text-brand-navy/70 mt-2 leading-relaxed">{p.desc}</p>
-                  <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">Open <span aria-hidden>→</span></span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="relative max-w-7xl mx-auto">
+          <Reveal className="text-center max-w-2xl mx-auto mb-20">
+            <h2 className="font-display text-4xl font-bold mb-6">The full growth loop</h2>
+            <p className="text-brand-navy/70">
+              Learn → Build → Connect → Apply → Innovate → Repeat. Every layer of the ecosystem is live.
+            </p>
+          </Reveal>
+
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {[
+              { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
+              { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
+              { img: innovateImg, label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, tag: "Step 03" },
+              { img: challengesImg, label: "Challenges", desc: "Compete in hackathons. Form teams. Win prizes.", to: "/challenges" as const, tag: "Step 04" },
+              { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
+              { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
+            ].map((p, i) => (
+              <Reveal as="li" key={p.label} delay={i * 90}>
+                <Link
+                  to={p.to}
+                  {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
+                  aria-label={`${p.label}: ${p.desc}`}
+                  className="group block h-full bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
+                    <img src={p.img} alt="" aria-hidden="true" loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-display font-bold text-lg">{p.label}</h3>
+                    <p className="text-sm text-brand-navy/70 mt-2 leading-relaxed">{p.desc}</p>
+                    <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">
+                      Open <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
       </section>
+
 
       <SiteFooter />
     </div>
