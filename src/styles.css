@@ -107,3 +107,50 @@
   }
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
+
+/* ---------- Decorative shape + motion layer ---------- */
+
+@keyframes sb-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -18px, 0) rotate(2deg); }
+}
+@keyframes sb-float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(12px, 14px, 0) scale(1.04); }
+}
+@keyframes sb-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes sb-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes sb-ring {
+  0% { transform: scale(0.85); opacity: 0.55; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+@keyframes sb-rise {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@utility sb-float { animation: sb-float 7s ease-in-out infinite; }
+@utility sb-float-slow { animation: sb-float-slow 11s ease-in-out infinite; }
+@utility sb-spin-slow { animation: sb-spin-slow 38s linear infinite; }
+@utility sb-marquee { animation: sb-marquee 32s linear infinite; }
+@utility sb-ring { animation: sb-ring 3.4s ease-out infinite; }
+@utility sb-rise { animation: sb-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@utility sb-dots {
+  background-image: radial-gradient(currentColor 1.4px, transparent 1.4px);
+  background-size: 16px 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-float, .sb-float-slow, .sb-spin-slow, .sb-marquee, .sb-ring, .sb-rise {
+    animation: none !important;
+  }
+  .sb-rise { opacity: 1; transform: none; }
+}
+
