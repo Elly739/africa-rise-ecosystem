@@ -195,44 +195,54 @@ function Landing() {
       </section>
 
       {/* Ecosystem */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 className="font-display text-4xl font-bold mb-6">The full growth loop</h2>
-          <p className="text-brand-navy/60">
-            Learn → Build → Connect → Apply → Innovate → Repeat. Every layer of the ecosystem is live.
-          </p>
+      <section className="relative py-24 px-6 overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="sb-float-slow absolute top-20 -right-20 size-72 rounded-full bg-brand-mint/10 blur-2xl" />
+          <div className="sb-dots absolute top-40 left-[3%] h-28 w-28 text-brand-navy/10" />
         </div>
 
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {[
-            { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
-            { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
-            { img: innovateImg, label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, tag: "Step 03" },
-            { img: challengesImg, label: "Challenges", desc: "Compete in hackathons. Form teams. Win prizes.", to: "/challenges" as const, tag: "Step 04" },
-            { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
-            { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
-          ].map((p) => (
-            <li key={p.label}>
-              <Link
-                to={p.to}
-                {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
-                aria-label={`${p.label}: ${p.desc}`}
-                className="group block bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
-                  <img src={p.img} alt="" aria-hidden="true" loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-display font-bold text-lg">{p.label}</h3>
-                  <p className="text-sm text-brand-navy/70 mt-2 leading-relaxed">{p.desc}</p>
-                  <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">Open <span aria-hidden>→</span></span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="relative max-w-7xl mx-auto">
+          <Reveal className="text-center max-w-2xl mx-auto mb-20">
+            <h2 className="font-display text-4xl font-bold mb-6">The full growth loop</h2>
+            <p className="text-brand-navy/70">
+              Learn → Build → Connect → Apply → Innovate → Repeat. Every layer of the ecosystem is live.
+            </p>
+          </Reveal>
+
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {[
+              { img: learnImg, label: "Learn", desc: "Courses, quizzes, and certificates.", to: "/courses" as const, tag: "Step 01" },
+              { img: careersImg, label: "Career Bridge", desc: "Internships, jobs, scholarships, CV builder, AI advisor.", to: "/careers" as const, tag: "Step 02" },
+              { img: innovateImg, label: "Innovate", desc: "Showcase projects, find collaborators, ship ideas.", to: "/innovate" as const, tag: "Step 03" },
+              { img: challengesImg, label: "Challenges", desc: "Compete in hackathons. Form teams. Win prizes.", to: "/challenges" as const, tag: "Step 04" },
+              { img: communityImg, label: "Community", desc: "Discussions, peer mentorship, study groups.", to: "/community" as const, tag: "Step 05" },
+              { img: mentorImg, label: "AI Mentor", desc: "Personalized learning paths and on-demand coaching.", to: "/auth" as const, tag: "Step 06" },
+            ].map((p, i) => (
+              <Reveal as="li" key={p.label} delay={i * 90}>
+                <Link
+                  to={p.to}
+                  {...(p.to === "/auth" ? { search: { mode: "signup" as const } } : {})}
+                  aria-label={`${p.label}: ${p.desc}`}
+                  className="group block h-full bg-white border border-brand-clay rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-brand-clay">
+                    <img src={p.img} alt="" aria-hidden="true" loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-brand-navy">{p.tag}</div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-display font-bold text-lg">{p.label}</h3>
+                    <p className="text-sm text-brand-navy/70 mt-2 leading-relaxed">{p.desc}</p>
+                    <span className="inline-flex items-center gap-1 mt-4 text-xs font-bold text-brand-orange">
+                      Open <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
       </section>
+
 
       <SiteFooter />
     </div>
