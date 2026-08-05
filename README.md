@@ -1,4 +1,4 @@
-# SkillBridge Africa
+# Pioneer Africa Hub
 
 A learning, careers, and innovation platform for African talent — courses, opportunities, community, challenges, and an AI mentor, in one place.
 

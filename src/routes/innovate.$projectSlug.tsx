@@ -17,11 +17,11 @@ export const Route = createFileRoute("/innovate/$projectSlug")({
     const p = (loaderData as { project?: { title: string; summary: string } } | undefined)?.project;
     return {
       meta: p ? [
-        { title: `${p.title} — SkillBridge Innovation Hub` },
+        { title: `${p.title} — Pioneer Africa Hub Innovation Hub` },
         { name: "description", content: p.summary },
         { property: "og:title", content: p.title },
         { property: "og:description", content: p.summary },
-      ] : [{ title: "Project — SkillBridge Africa" }],
+      ] : [{ title: "Project — Pioneer Africa Hub" }],
     };
   },
   loader: async ({ context, params }) => {

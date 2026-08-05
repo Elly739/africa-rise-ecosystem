@@ -18,7 +18,7 @@ type AppRole = Database["public"]["Enums"]["app_role"];
 const PRIVILEGED: AppRole[] = ["admin", "moderator", "teacher", "partner"];
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Dashboard · Pioneer Africa Hub" }] }),
   component: Dashboard,
 });
 

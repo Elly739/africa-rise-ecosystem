@@ -6,7 +6,7 @@ import { getQuiz, submitQuiz } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
 
 export const Route = createFileRoute("/_authenticated/quizzes/$quizId")({
-  head: () => ({ meta: [{ title: "Quiz · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Quiz · Pioneer Africa Hub" }] }),
   component: QuizPage,
 });
 

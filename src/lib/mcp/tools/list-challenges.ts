@@ -5,7 +5,7 @@ import { z } from "zod";
 export default defineTool({
   name: "list_challenges",
   title: "List innovation challenges",
-  description: "List innovation challenges on Pioneer Hub Africa, optionally filtered by status.",
+  description: "List innovation challenges on Pioneer Africa Hub, optionally filtered by status.",
   inputSchema: {
     status: z.enum(["open", "judging", "closed"]).optional(),
     limit: z.number().int().min(1).max(50).optional(),

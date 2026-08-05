@@ -16,7 +16,7 @@ const challengesQuery = queryOptions({
 export const Route = createFileRoute("/challenges")({
   head: () => ({
     meta: [
-      { title: "Innovation Challenges — SkillBridge Africa" },
+      { title: "Innovation Challenges — Pioneer Africa Hub" },
       { name: "description", content: "Compete in time-bound innovation challenges. Form teams, ship submissions, vote on winners." },
       { property: "og:title", content: "Innovation Challenges" },
     ],

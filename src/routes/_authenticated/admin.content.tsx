@@ -5,7 +5,7 @@ import { listContentForModeration, moderateContent } from "@/lib/api/admin.funct
 import { Route as AdminRoute } from "./admin";
 
 export const Route = createFileRoute("/_authenticated/admin/content")({
-  head: () => ({ meta: [{ title: "Content · Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Content · Admin · Pioneer Africa Hub" }] }),
   component: AdminContent,
 });
 

@@ -16,7 +16,7 @@ const threadQuery = (id: string) => queryOptions({
 export const Route = createFileRoute("/community/$discussionId")({
   head: ({ loaderData }) => {
     const t = (loaderData as { discussion?: { title: string } } | undefined)?.discussion?.title;
-    return { meta: [{ title: `${t ?? "Discussion"} — SkillBridge Community` }] };
+    return { meta: [{ title: `${t ?? "Discussion"} — Pioneer Africa Hub Community` }] };
   },
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(threadQuery(params.discussionId));

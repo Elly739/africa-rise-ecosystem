@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { listRoleRequests, reviewRoleRequest } from "@/lib/api/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/requests")({
-  head: () => ({ meta: [{ title: "Role requests · Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Role requests · Admin · Pioneer Africa Hub" }] }),
   component: AdminRequests,
 });
 

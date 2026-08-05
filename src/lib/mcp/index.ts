@@ -6,9 +6,9 @@ import listDiscussions from "./tools/list-discussions";
 
 export default defineMcp({
   name: "pioneer-hub-africa-mcp",
-  title: "Pioneer Hub Africa MCP",
+  title: "Pioneer Africa Hub MCP",
   version: "0.1.0",
   instructions:
-    "Read-only tools for the Pioneer Hub Africa learning and innovation ecosystem. Browse courses, career opportunities, innovation challenges, and community discussions.",
+    "Read-only tools for the Pioneer Africa Hub learning and innovation ecosystem. Browse courses, career opportunities, innovation challenges, and community discussions.",
   tools: [listCourses, listOpportunities, listChallenges, listDiscussions],
 });

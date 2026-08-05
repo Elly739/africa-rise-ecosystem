@@ -11,7 +11,7 @@ type ApplicationStatus = Database["public"]["Enums"]["application_status"];
 const STATUSES: ApplicationStatus[] = ["submitted", "under_review", "interview", "offer", "rejected", "withdrawn"];
 
 export const Route = createFileRoute("/_authenticated/admin/opportunities")({
-  head: () => ({ meta: [{ title: "Opportunities · Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Opportunities · Admin · Pioneer Africa Hub" }] }),
   component: AdminOpportunities,
 });
 

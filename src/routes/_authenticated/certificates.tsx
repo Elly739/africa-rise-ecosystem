@@ -5,7 +5,7 @@ import { getDashboard } from "@/lib/api/learn.functions";
 import { SiteNav } from "@/components/site-nav";
 
 export const Route = createFileRoute("/_authenticated/certificates")({
-  head: () => ({ meta: [{ title: "Certificates · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Certificates · Pioneer Africa Hub" }] }),
   component: CertsPage,
 });
 

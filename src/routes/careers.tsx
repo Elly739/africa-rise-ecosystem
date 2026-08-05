@@ -13,9 +13,9 @@ const oppsQuery = queryOptions({
 export const Route = createFileRoute("/careers")({
   head: () => ({
     meta: [
-      { title: "Career Bridge — SkillBridge Africa" },
+      { title: "Career Bridge — Pioneer Africa Hub" },
       { name: "description", content: "Search internships, jobs, and scholarships across Africa — filter by remote, location, and skill tags." },
-      { property: "og:title", content: "Career Bridge — SkillBridge Africa" },
+      { property: "og:title", content: "Career Bridge — Pioneer Africa Hub" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(oppsQuery),

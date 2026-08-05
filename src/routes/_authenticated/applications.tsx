@@ -5,7 +5,7 @@ import { SiteNav } from "@/components/site-nav";
 import { listMyApplications } from "@/lib/api/careers.functions";
 
 export const Route = createFileRoute("/_authenticated/applications")({
-  head: () => ({ meta: [{ title: "My Applications · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "My Applications · Pioneer Africa Hub" }] }),
   component: MyApplicationsPage,
 });
 

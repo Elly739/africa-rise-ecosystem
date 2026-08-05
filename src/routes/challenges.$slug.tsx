@@ -21,7 +21,7 @@ export const Route = createFileRoute("/challenges/$slug")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(challengeQuery(params.slug)),
   head: ({ params }) => ({
     meta: [
-      { title: `Challenge — SkillBridge Africa` },
+      { title: `Challenge — Pioneer Africa Hub` },
       { name: "description", content: `Innovation challenge ${params.slug}` },
     ],
   }),

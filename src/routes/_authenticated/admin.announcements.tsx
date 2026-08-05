@@ -10,7 +10,7 @@ type AppRole = Database["public"]["Enums"]["app_role"];
 const AUDIENCE_ROLES: AppRole[] = ["student", "teacher", "partner", "moderator"];
 
 export const Route = createFileRoute("/_authenticated/admin/announcements")({
-  head: () => ({ meta: [{ title: "Announcements · Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Announcements · Admin · Pioneer Africa Hub" }] }),
   component: AdminAnnouncements,
 });
 

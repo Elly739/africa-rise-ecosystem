@@ -16,9 +16,9 @@ const dataQuery = queryOptions({
 export const Route = createFileRoute("/courses/")({
   head: () => ({
     meta: [
-      { title: "Courses · SkillBridge Africa" },
+      { title: "Courses · Pioneer Africa Hub" },
       { name: "description", content: "Browse expert-led courses across engineering, design, data, and business — built for African innovators." },
-      { property: "og:title", content: "Courses · SkillBridge Africa" },
+      { property: "og:title", content: "Courses · Pioneer Africa Hub" },
       { property: "og:description", content: "Expert-led learning paths for the African digital economy." },
     ],
   }),

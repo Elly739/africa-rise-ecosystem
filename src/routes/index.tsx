@@ -20,9 +20,9 @@ const coursesQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SkillBridge Africa — Bridging learning and opportunity" },
+      { title: "Pioneer Africa Hub — Bridging learning and opportunity" },
       { name: "description", content: "A digital growth ecosystem for African students and young innovators. Master in-demand skills, build real projects, launch your career." },
-      { property: "og:title", content: "SkillBridge Africa" },
+      { property: "og:title", content: "Pioneer Africa Hub" },
       { property: "og:description", content: "Bridging the gap between learning and opportunity for young Africans." },
     ],
   }),
@@ -181,7 +181,7 @@ function Landing() {
             <div className="group bg-brand-orange p-8 rounded-3xl text-brand-navy flex flex-col">
               <h3 className="text-2xl font-display font-bold leading-tight mb-4">Ready to certify your expertise?</h3>
               <p className="text-brand-navy/80 text-sm mb-12 flex-1">
-                Complete a course and a passing quiz to earn a verifiable SkillBridge certificate.
+                Complete a course and a passing quiz to earn a verifiable Pioneer Africa Hub certificate.
               </p>
               <Link
                 to="/auth"

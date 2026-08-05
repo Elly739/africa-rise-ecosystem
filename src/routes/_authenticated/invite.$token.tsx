@@ -6,7 +6,7 @@ import { SiteNav } from "@/components/site-nav";
 import { redeemRoleInvite } from "@/lib/api/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/invite/$token")({
-  head: () => ({ meta: [{ title: "Redeem invite · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Redeem invite · Pioneer Africa Hub" }] }),
   component: RedeemInvite,
 });
 

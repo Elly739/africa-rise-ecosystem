@@ -7,7 +7,7 @@ import { saveOnboarding } from "@/lib/api/personalization.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/welcome")({
-  head: () => ({ meta: [{ title: "Welcome · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Welcome · Pioneer Africa Hub" }] }),
   component: Welcome,
 });
 

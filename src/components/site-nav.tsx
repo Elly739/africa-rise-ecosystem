@@ -57,7 +57,7 @@ export function SiteNav() {
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto gap-3">
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
-          <span className="font-display text-lg font-bold tracking-tight">SkillBridge<span className="text-brand-orange">.</span></span>
+          <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub<span className="text-brand-orange">.</span></span>
         </Link>
 
         <div className="hidden md:flex gap-6 font-medium text-sm">

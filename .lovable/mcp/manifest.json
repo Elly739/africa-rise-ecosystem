@@ -9,13 +9,13 @@
     "server": {
       "name": "pioneer-hub-africa-mcp",
       "version": "0.1.0",
-      "title": "Pioneer Hub Africa MCP"
+      "title": "Pioneer Africa Hub MCP"
     },
     "tools": [
       {
         "name": "list_courses",
         "title": "List courses",
-        "description": "List published courses available on Pioneer Hub Africa, with optional subject filter and search.",
+        "description": "List published courses available on Pioneer Africa Hub, with optional subject filter and search.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -77,7 +77,7 @@
       {
         "name": "list_challenges",
         "title": "List innovation challenges",
-        "description": "List innovation challenges on Pioneer Hub Africa, optionally filtered by status.",
+        "description": "List innovation challenges on Pioneer Africa Hub, optionally filtered by status.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -107,7 +107,7 @@
       {
         "name": "list_discussions",
         "title": "List community discussions",
-        "description": "List recent community discussions on Pioneer Hub Africa.",
+        "description": "List recent community discussions on Pioneer Africa Hub.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

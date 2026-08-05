@@ -18,8 +18,8 @@ export const Route = createFileRoute("/u/$userId")({
     const name = (loaderData as { profile?: { display_name?: string } } | null | undefined)?.profile?.display_name;
     return {
       meta: [
-        { title: `${name ?? "Builder"} — SkillBridge Africa` },
-        { name: "description", content: `${name ?? "A builder"}'s profile on SkillBridge Africa.` },
+        { title: `${name ?? "Builder"} — Pioneer Africa Hub` },
+        { name: "description", content: `${name ?? "A builder"}'s profile on Pioneer Africa Hub.` },
       ],
     };
   },
