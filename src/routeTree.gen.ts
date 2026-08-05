@@ -18,6 +18,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UUserIdRouteImport } from './routes/u.$userId'
 import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$projectSlug'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
@@ -89,6 +90,11 @@ const IndexRoute = IndexRouteImport.update({
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UUserIdRoute = UUserIdRouteImport.update({
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -308,6 +315,7 @@ export interface FileRoutesByTo {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -348,6 +356,7 @@ export interface FileRoutesById {
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -388,6 +397,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog/'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/announcements'
@@ -425,6 +435,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog'
     | '/courses'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/announcements'
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog/'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/announcements'
@@ -492,6 +504,7 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   UUserIdRoute: typeof UUserIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -559,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/courses'
       fullPath: '/courses/'
       preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/u/$userId': {
@@ -868,6 +888,7 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   UUserIdRoute: UUserIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
