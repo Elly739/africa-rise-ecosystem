@@ -58,7 +58,7 @@ function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const currentPath = useRouterState({ select: (s) => s.location.pathname });
 
-  const visibleNav = navItems.filter((item) => item.roles.some((r) => roles.includes(r)));
+  const visibleNav = navItems.filter((item) => item.roles.some((r) => (roles as string[]).includes(r)));
 
   return (
     <div className="min-h-dvh bg-brand-bg text-brand-navy">
