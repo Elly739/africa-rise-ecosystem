@@ -24,6 +24,7 @@ import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$proj
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
@@ -121,6 +122,11 @@ const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ChallengesRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
   id: '/welcome',
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/mentor': typeof AuthenticatedMentorRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/mentor': typeof AuthenticatedMentorRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -351,6 +359,7 @@ export interface FileRoutesById {
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -392,6 +401,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/request-access'
     | '/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
@@ -430,6 +440,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/request-access'
     | '/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
@@ -470,6 +481,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mentor'
     | '/_authenticated/request-access'
     | '/_authenticated/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
@@ -502,6 +514,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   UUserIdRoute: typeof UUserIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -615,6 +628,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/challenges/$slug'
       preLoaderRoute: typeof ChallengesSlugRouteImport
       parentRoute: typeof ChallengesRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/welcome': {
       id: '/_authenticated/welcome'
@@ -886,6 +906,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   UUserIdRoute: UUserIdRoute,
   BlogIndexRoute: BlogIndexRoute,
