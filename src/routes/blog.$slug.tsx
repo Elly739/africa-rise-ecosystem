@@ -83,7 +83,7 @@ function BlogPost() {
         </p>
 
         <div className="prose prose-lg max-w-none mt-8 prose-headings:font-display prose-headings:text-brand-navy prose-p:text-brand-navy/80 prose-li:text-brand-navy/80 prose-strong:text-brand-navy prose-a:text-brand-orange">
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown>{post.body}</ReactMarkdown>
         </div>
       </article>
 
