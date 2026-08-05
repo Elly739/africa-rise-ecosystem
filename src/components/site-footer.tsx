@@ -23,9 +23,9 @@ export function SiteFooter() {
           </div>
           <div className="text-sm text-brand-navy/40">© {new Date().getFullYear()} Pioneer Africa Hub. All rights reserved.</div>
           <div className="flex gap-6 text-sm font-bold text-brand-navy">
-            <a href="#">Twitter</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">Discord</a>
+            <Link to="/blog">Blog</Link>
+            <Link to="/courses">Courses</Link>
+            <Link to="/careers">Careers</Link>
           </div>
         </div>
       </div>
