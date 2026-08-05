@@ -13,6 +13,7 @@ const navLinks = [
   { to: "/innovate" as const, label: "Innovate" },
   { to: "/challenges" as const, label: "Challenges" },
   { to: "/community" as const, label: "Community" },
+  { to: "/blog" as const, label: "Blog" },
 ];
 
 const ADMIN_ROLES: Database["public"]["Enums"]["app_role"][] = ["admin", "moderator", "teacher", "partner"];
