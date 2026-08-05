@@ -141,6 +141,54 @@ export type Database = {
           },
         ]
       }
+      blog_posts: {
+        Row: {
+          author_name: string
+          body: string
+          category: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          published: boolean
+          published_at: string
+          read_minutes: number
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_name?: string
+          body?: string
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string
+          read_minutes?: number
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string
+          read_minutes?: number
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           code: string
