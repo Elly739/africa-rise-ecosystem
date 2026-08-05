@@ -16,9 +16,9 @@ const projectsQuery = queryOptions({
 export const Route = createFileRoute("/innovate")({
   head: () => ({
     meta: [
-      { title: "Innovation Hub — SkillBridge Africa" },
+      { title: "Innovation Hub — Pioneer Africa Hub" },
       { name: "description", content: "Showcase your projects, prototypes, and startup ideas. Turn ideas into real-world impact." },
-      { property: "og:title", content: "Innovation Hub — SkillBridge Africa" },
+      { property: "og:title", content: "Innovation Hub — Pioneer Africa Hub" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(projectsQuery),

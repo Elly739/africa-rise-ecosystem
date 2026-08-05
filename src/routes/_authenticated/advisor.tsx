@@ -3,7 +3,7 @@ import { SiteNav } from "@/components/site-nav";
 import { AIChat } from "@/components/ai-chat";
 
 export const Route = createFileRoute("/_authenticated/advisor")({
-  head: () => ({ meta: [{ title: "AI Career Advisor — SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "AI Career Advisor — Pioneer Africa Hub" }] }),
   component: AdvisorPage,
 });
 
@@ -20,7 +20,7 @@ function AdvisorPage() {
         <AIChat
           kind="advisor"
           accent="orange"
-          intro="Hey 👋 I'm your SkillBridge Career Advisor. What career move can I help you make this week?"
+          intro="Hey 👋 I'm your Pioneer Africa Hub Career Advisor. What career move can I help you make this week?"
           suggestions={[
             "Review my CV strategy for a software internship",
             "How do I apply to Mastercard Foundation Scholars?",

@@ -5,7 +5,7 @@ import { listCoursesAdmin } from "@/lib/api/admin.functions";
 import { Route as AdminRoute } from "./admin";
 
 export const Route = createFileRoute("/_authenticated/admin/courses")({
-  head: () => ({ meta: [{ title: "Courses · Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Courses · Admin · Pioneer Africa Hub" }] }),
   component: AdminCourses,
 });
 

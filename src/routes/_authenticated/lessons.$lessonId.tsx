@@ -7,7 +7,7 @@ import { SiteNav } from "@/components/site-nav";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/lessons/$lessonId")({
-  head: () => ({ meta: [{ title: "Lesson · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Lesson · Pioneer Africa Hub" }] }),
   component: LessonPage,
 });
 

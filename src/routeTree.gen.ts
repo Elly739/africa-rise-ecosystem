@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as InnovateRouteImport } from './routes/innovate'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -18,11 +19,13 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UUserIdRouteImport } from './routes/u.$userId'
 import { Route as InnovateProjectSlugRouteImport } from './routes/innovate.$projectSlug'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
@@ -47,6 +50,11 @@ import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin.announcements'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
@@ -91,6 +99,11 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UUserIdRoute = UUserIdRouteImport.update({
   id: '/u/$userId',
   path: '/u/$userId',
@@ -115,6 +128,11 @@ const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ChallengesRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
   id: '/welcome',
@@ -255,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/mcp': typeof McpRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -266,11 +285,13 @@ export interface FileRoutesByFullPath {
   '/mentor': typeof AuthenticatedMentorRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -293,6 +314,7 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/mcp': typeof McpRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/advisor': typeof AuthenticatedAdvisorRoute
@@ -303,11 +325,13 @@ export interface FileRoutesByTo {
   '/mentor': typeof AuthenticatedMentorRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -332,6 +356,7 @@ export interface FileRoutesById {
   '/community': typeof CommunityRouteWithChildren
   '/innovate': typeof InnovateRouteWithChildren
   '/mcp': typeof McpRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -343,11 +368,13 @@ export interface FileRoutesById {
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/innovate/$projectSlug': typeof InnovateProjectSlugRoute
   '/u/$userId': typeof UUserIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -372,6 +399,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/innovate'
     | '/mcp'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -383,11 +411,13 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/request-access'
     | '/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog/'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/announcements'
@@ -410,6 +440,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/innovate'
     | '/mcp'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/advisor'
@@ -420,11 +451,13 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/request-access'
     | '/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog'
     | '/courses'
     | '/.mcp/invoke-tool/$tool'
     | '/admin/announcements'
@@ -448,6 +481,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/innovate'
     | '/mcp'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
@@ -459,11 +493,13 @@ export interface FileRouteTypes {
     | '/_authenticated/mentor'
     | '/_authenticated/request-access'
     | '/_authenticated/welcome'
+    | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
     | '/courses/$courseId'
     | '/innovate/$projectSlug'
     | '/u/$userId'
+    | '/blog/'
     | '/courses/'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/announcements'
@@ -488,16 +524,26 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRouteWithChildren
   InnovateRoute: typeof InnovateRouteWithChildren
   McpRoute: typeof McpRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   UUserIdRoute: typeof UUserIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mcp': {
       id: '/mcp'
       path: '/mcp'
@@ -561,6 +607,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$userId': {
       id: '/u/$userId'
       path: '/u/$userId'
@@ -595,6 +648,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/challenges/$slug'
       preLoaderRoute: typeof ChallengesSlugRouteImport
       parentRoute: typeof ChallengesRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/welcome': {
       id: '/_authenticated/welcome'
@@ -863,11 +923,14 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRouteWithChildren,
   InnovateRoute: InnovateRouteWithChildren,
   McpRoute: McpRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   UUserIdRoute: UUserIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }

@@ -6,7 +6,7 @@ import { getMyCV, saveMyCV } from "@/lib/api/ecosystem.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/cv")({
-  head: () => ({ meta: [{ title: "CV Builder — SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "CV Builder — Pioneer Africa Hub" }] }),
   component: CVPage,
 });
 

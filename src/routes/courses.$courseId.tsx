@@ -17,9 +17,9 @@ const courseQuery = (courseId: string) =>
 export const Route = createFileRoute("/courses/$courseId")({
   head: ({ params }) => ({
     meta: [
-      { title: "Course · SkillBridge Africa" },
+      { title: "Course · Pioneer Africa Hub" },
       { name: "description", content: "Course details, lessons, and the final quiz." },
-      { property: "og:title", content: `SkillBridge Africa course ${params.courseId}` },
+      { property: "og:title", content: `Pioneer Africa Hub course ${params.courseId}` },
     ],
   }),
   loader: ({ context, params }) => context.queryClient.ensureQueryData(courseQuery(params.courseId)),

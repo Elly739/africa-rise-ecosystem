@@ -5,7 +5,7 @@ import { getAdminStats, getAdminOverview, getTeacherWorkspace, getPartnerWorkspa
 import { Route as AdminRoute } from "./admin";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
-  head: () => ({ meta: [{ title: "Admin · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Admin · Pioneer Africa Hub" }] }),
   component: AdminDashboard,
 });
 

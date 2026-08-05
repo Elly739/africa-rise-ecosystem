@@ -15,7 +15,7 @@ const ROLES: { value: AppRole; label: string; desc: string }[] = [
 ];
 
 export const Route = createFileRoute("/_authenticated/request-access")({
-  head: () => ({ meta: [{ title: "Request access · SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "Request access · Pioneer Africa Hub" }] }),
   component: RequestAccessPage,
 });
 

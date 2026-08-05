@@ -3,7 +3,7 @@ import { SiteNav } from "@/components/site-nav";
 import { AIChat } from "@/components/ai-chat";
 
 export const Route = createFileRoute("/_authenticated/mentor")({
-  head: () => ({ meta: [{ title: "AI Mentor — SkillBridge Africa" }] }),
+  head: () => ({ meta: [{ title: "AI Mentor — Pioneer Africa Hub" }] }),
   component: MentorPage,
 });
 
@@ -20,7 +20,7 @@ function MentorPage() {
         <AIChat
           kind="mentor"
           accent="mint"
-          intro="Hi! I'm your SkillBridge AI Mentor. Tell me what you're learning or trying to figure out, and I'll help you plan the next step."
+          intro="Hi! I'm your Pioneer Africa Hub AI Mentor. Tell me what you're learning or trying to figure out, and I'll help you plan the next step."
           suggestions={[
             "Build me a 4-week roadmap for data science",
             "Explain smart contracts like I'm a beginner",

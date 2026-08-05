@@ -5,7 +5,7 @@ import { z } from "zod";
 export default defineTool({
   name: "list_courses",
   title: "List courses",
-  description: "List published courses available on Pioneer Hub Africa, with optional subject filter and search.",
+  description: "List published courses available on Pioneer Africa Hub, with optional subject filter and search.",
   inputSchema: {
     search: z.string().trim().optional().describe("Optional text to match in course title or description."),
     limit: z.number().int().min(1).max(50).optional().describe("Max results (default 20)."),

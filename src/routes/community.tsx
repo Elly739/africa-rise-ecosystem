@@ -16,9 +16,9 @@ const discussionsQuery = queryOptions({
 export const Route = createFileRoute("/community")({
   head: () => ({
     meta: [
-      { title: "Community — SkillBridge Africa" },
+      { title: "Community — Pioneer Africa Hub" },
       { name: "description", content: "Connect, discuss, and grow with young African builders. Study groups, peer mentorship, and conversations." },
-      { property: "og:title", content: "SkillBridge Community" },
+      { property: "og:title", content: "Pioneer Africa Hub Community" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(discussionsQuery),

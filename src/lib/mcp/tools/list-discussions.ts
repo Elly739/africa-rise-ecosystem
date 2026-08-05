@@ -5,7 +5,7 @@ import { z } from "zod";
 export default defineTool({
   name: "list_discussions",
   title: "List community discussions",
-  description: "List recent community discussions on Pioneer Hub Africa.",
+  description: "List recent community discussions on Pioneer Africa Hub.",
   inputSchema: {
     search: z.string().trim().optional().describe("Match text in discussion title or body."),
     limit: z.number().int().min(1).max(50).optional(),

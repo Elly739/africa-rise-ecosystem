@@ -13,8 +13,8 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Sign in · SkillBridge Africa" },
-      { name: "description", content: "Sign in or create your SkillBridge Africa account to start learning." },
+      { title: "Sign in · Pioneer Africa Hub" },
+      { name: "description", content: "Sign in or create your Pioneer Africa Hub account to start learning." },
     ],
   }),
   component: AuthPage,
@@ -77,7 +77,7 @@ function AuthPage() {
       <div className="hidden lg:flex flex-col justify-between bg-brand-navy text-white p-12">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
-          <span className="font-display text-lg font-bold tracking-tight">SkillBridge Africa</span>
+          <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub</span>
         </Link>
         <div className="space-y-6 max-w-md">
           <h2 className="font-display text-5xl font-bold leading-tight">
@@ -85,7 +85,7 @@ function AuthPage() {
           </h2>
           <p className="text-white/60 text-lg">Join a community of young African builders mastering the skills of the new economy.</p>
         </div>
-        <div className="text-xs text-white/40 uppercase tracking-widest">© SkillBridge Africa</div>
+        <div className="text-xs text-white/40 uppercase tracking-widest">© Pioneer Africa Hub</div>
       </div>
 
       <div className="flex items-center justify-center p-8">
@@ -93,7 +93,7 @@ function AuthPage() {
           <div className="lg:hidden">
             <Link to="/" className="flex items-center gap-2.5">
               <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
-              <span className="font-display text-lg font-bold tracking-tight">SkillBridge</span>
+              <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub</span>
             </Link>
           </div>
 
@@ -171,7 +171,7 @@ function AuthPage() {
           </form>
 
           <p className="text-sm text-brand-navy/60 text-center">
-            {mode === "signup" ? "Already have an account? " : "New to SkillBridge? "}
+            {mode === "signup" ? "Already have an account? " : "New to Pioneer Africa Hub? "}
             <button
               type="button"
               onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
