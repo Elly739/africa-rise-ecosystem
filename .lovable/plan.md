@@ -1,71 +1,61 @@
-## Goals
+# Positioning Pioneer as Africa's student growth ecosystem
 
-1. Email notifications for role requests & invites (Lovable Emails).
-2. Role-differentiated dashboards (Student / Teacher / Partner / Admin) with the right features and polished UI.
-3. Admin gets more oversight tools.
-4. Add a project README.
+Goal: make the product visibly answer "how do I get discovered and land opportunities?", not "here is another course platform". Below is what already exists, the real gaps from the discussion, and what to build.
 
----
+## Where we already stand
 
-## 1. Email notifications
+| Discussion theme | Current state |
+| --- | --- |
+| Opportunity discovery | Careers board with search, location, remote and tag filters — but no scholarships/hackathons/grants sourcing, no saved searches, no alerts |
+| Student innovation infrastructure | Innovate showcase + public profile at `/u/:id` with projects, certificates, followers — but no innovation score, no collaborator requests, no rich portfolio |
+| Talent discovery | Nothing. No way for an employer to browse or filter students |
+| AI growth coach | Mentor + Advisor chat exist, but they are generic chatbots, not grounded in the learner's own projects, XP, and matching opportunities |
+| Ecosystem narrative | Landing page still reads learn-first; positioning statement not on the site |
 
-Use Lovable's built-in email system (needs a verified email domain — I'll trigger the setup dialog first if none exists).
+## What to build
 
-Auto-sent app emails:
-- **Role request submitted** → confirmation to the applicant ("We got your request, we'll review it")
-- **Role request approved / rejected** → notice to the applicant with next steps
-- **Admin alert** → `iamellyokello@gmail.com` gets an email whenever a new role request is submitted
-- **Invite created** → email to the invitee (when an email is specified on the invite) with the redemption link
-- **Invite redeemed** → notice to admin
+### 1. Reposition the story (fast, high impact)
+- Rewrite the landing hero, section copy, and meta descriptions around the one-sentence pitch: learn skills, build projects, connect with mentors, access opportunities that launch careers and ventures.
+- Add a "journey" band on the homepage: Learn → Build → Get discovered → Get hired → Mentor others, each step linking to the live module.
+- Update SEO titles/descriptions sitewide from "learning platform" language to talent/opportunity language.
 
-Templates: `role-request-received`, `role-request-decision`, `role-request-admin-alert`, `role-invite`, `role-invite-redeemed`. All branded with SkillBridge Africa styling.
+### 2. Opportunity discovery that finds students
+- Extend opportunity types beyond internship/job/scholarship to include hackathon, fellowship, grant, incubator.
+- Deadline field + "closing soon" sorting, and an expired state so the board stays trustworthy.
+- Save an opportunity, plus a weekly digest notification of new matches based on onboarding interests.
+- "Matched for you" section at the top of Careers using the existing personalization scoring.
 
-Server hooks: fire these from the existing `requestRole`, `reviewRoleRequest`, `createRoleInvite`, `redeemRoleInvite` server functions.
+### 3. Portfolio + innovation score
+- Upgrade the public profile into a real portfolio: headline, university/year, skills, links (GitHub, LinkedIn), featured projects.
+- Innovation score computed from real activity: projects published, challenge submissions, course completions, community contributions, likes received. Shown as a badge with a breakdown so it never feels arbitrary.
+- "Looking for collaborators" flag on projects, with a request-to-join action that notifies the owner.
+- Shareable profile card metadata so profiles preview well when posted on LinkedIn/X.
 
----
+### 4. Talent discovery for employers/partners
+- `/talent` directory for partner and admin roles: filter students by skill, interest, innovation score, availability, location.
+- Students opt in ("open to internships / jobs / collaboration") — nobody is listed without consent.
+- Partner can shortlist a student and send a message that lands as a notification.
 
-## 2. Dashboards per role
+### 5. Grounded AI growth coach
+- Replace the generic mentor prompt with a context-aware coach that receives the learner's profile, interests, enrolled courses, projects, XP, and the current open opportunities/challenges.
+- Output a structured plan: next skills, 3 matching opportunities, 1 challenge to join, 1 project idea — each item deep-linking into the app.
+- Surface a compact version of this on the dashboard as "Your next moves".
 
-Currently everyone hits `/dashboard` (the learner view). I'll:
+### 6. Naming and brand risk (your decision, not code)
+- Before more brand investment: check `.com` / `.africa` availability, trademark conflicts in Kenya/EA, and social + app store handles for "Pioneer".
+- Recommendation: keep the copy positioning ("Africa's student growth ecosystem") independent of the wordmark so a rename later is a find-and-replace, not a rebuild. I'll keep brand strings centralised for that reason.
 
-- Detect roles at load and, for privileged users, show a **role switcher / quick-action band** at the top of `/dashboard` with links into their specialised area — the general learner content stays visible below so teachers/partners keep access to their own learning.
-- Give each privileged role its own workspace under `/admin/*` (already scoped by role in the sidebar) with new, dedicated landing content:
+## Suggested sequencing
 
-**Teacher workspace** (`/admin/courses` + new `/admin/teacher`)
-- My courses list, "Create course" CTA (stub route → notice), enrolments per course, quiz pass rates, recent learner progress.
-
-**Partner workspace** (`/admin/opportunities` + new `/admin/partner`)
-- My posted opportunities, applications inbox with quick status updates, "Post opportunity" CTA.
-
-**Admin workspace** (enhancements to `/admin`)
-- New **Announcements** feature: admin posts an in-app notification broadcast to all users (or a role subset). Table `announcements` + fan-out via existing `notifications`.
-- Dashboard tiles: pending role requests count, unreviewed submissions, open opportunities, active users this week.
-- Quick actions row (approve pending, create invite, post announcement).
-
-**Student (default)** — unchanged content but the top band shows "Request teacher/partner access" only if they have no privileged roles.
-
----
-
-## 3. UI polish
-
-- Consistent card styles across `/admin/*` (rounded-2xl, subtle border, brand tokens — no ad-hoc colors).
-- Stat tiles with icons + trendless numbers (real data from server fn).
-- Empty states with friendly copy + CTA.
-- Mobile: admin sidebar drawer already exists; verify layouts collapse cleanly.
-
----
-
-## 4. README.md
-
-Project-root README covering: what SkillBridge Africa is, feature list, tech stack (TanStack Start, Lovable Cloud, Tailwind v4), local dev (`bun install`, `bun run dev`), role model & admin lockdown, contribution notes, and deploy.
-
----
+1. Repositioning copy + journey band + SEO (small, immediate)
+2. Opportunity types, deadlines, saved opportunities, matches
+3. Portfolio upgrade + innovation score
+4. Grounded AI coach
+5. Talent directory
 
 ## Technical notes
 
-- **DB migration**: `announcements` table (title, body, link, target_roles[], created_by, created_at) with RLS + GRANTs + a helper server fn that fan-outs into `notifications`.
-- **Email infra**: call `email_domain--check_email_domain_status`; if no domain, show setup dialog and stop until user completes it, then continue.
-- **Templates**: React Email tsx under `src/lib/email-templates/`, registered in `registry.ts`.
-- **Send helper**: reuse scaffolded `/lovable/email/transactional/send` with `idempotencyKey` derived from `request.id` + event.
-
-Sound good? I'll ship it all in one pass after you confirm.
+- Schema: add `deadline`, widen the opportunity type enum; new `saved_opportunities`, `collaboration_requests`, `talent_visibility` columns/tables; all with grants + RLS following the existing pattern.
+- Innovation score as a Postgres view or scheduled recompute, not a client calculation, so it can be filtered and sorted on.
+- Coach context assembled server-side in a new `coach.functions.ts` and passed to the existing AI Gateway call; no new provider.
+- Talent directory reads through a security-definer function restricted to `partner`/`admin`, returning only opted-in profiles.
