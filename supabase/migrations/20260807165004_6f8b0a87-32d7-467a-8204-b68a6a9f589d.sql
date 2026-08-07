@@ -1,0 +1,1 @@
+ALTER VIEW public.innovation_scores SET (security_invoker = on);
