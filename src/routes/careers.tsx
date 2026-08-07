@@ -59,6 +59,23 @@ function CareersPage() {
   const [location, setLocation] = useState("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
+
+  const qc = useQueryClient();
+  const savedFn = useServerFn(listMySavedOpportunities);
+  const saveFn = useServerFn(toggleSaveOpportunity);
+  const matchFn = useServerFn(getMatchedOpportunities);
+
+  const { data: savedIds } = useQuery({ queryKey: ["saved-opps"], queryFn: () => savedFn(), enabled: signedIn });
+  const { data: matched } = useQuery({ queryKey: ["matched-opps"], queryFn: () => matchFn(), enabled: signedIn });
+  const saved = new Set(savedIds ?? []);
+
+  const save = useMutation({
+    mutationFn: (opportunityId: string) => saveFn({ data: { opportunityId } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved-opps"] }),
+  });
 
   const locations = useMemo(() => {
     const set = new Set<string>();
@@ -73,7 +90,7 @@ function CareersPage() {
   }, [opps]);
 
   const filtered = opps.filter((o: any) => {
-    if (tab !== "all" && o.type !== tab) return false;
+    if (tab === "saved" ? !saved.has(o.id) : tab !== "all" && o.type !== tab) return false;
     if (remoteOnly && !o.remote) return false;
     if (location !== "all" && o.location !== location) return false;
     if (activeTag && !(o.tags ?? []).includes(activeTag)) return false;
@@ -87,6 +104,8 @@ function CareersPage() {
 
   const clearAll = () => { setTab("all"); setQ(""); setLocation("all"); setRemoteOnly(false); setActiveTag(null); };
   const hasFilters = tab !== "all" || q || location !== "all" || remoteOnly || activeTag;
+
+
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-navy">
