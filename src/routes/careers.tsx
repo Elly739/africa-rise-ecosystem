@@ -182,6 +182,22 @@ function CareersPage() {
           )}
         </div>
 
+        {signedIn && matched && matched.matches.length > 0 && (
+          <section className="mt-8" aria-labelledby="matched-heading">
+            <h2 id="matched-heading" className="font-display text-xl font-bold mb-3">Matched for you</h2>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {matched.matches.slice(0, 3).map((m: any) => (
+                <div key={m.id} className="p-5 rounded-2xl bg-brand-navy text-white">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">{m.type}</p>
+                  <p className="font-display font-bold mt-1 line-clamp-2">{m.title}</p>
+                  <p className="text-xs text-white/60 mt-1">{m.organization}</p>
+                  <p className="text-[10px] mt-2 text-white/50">Matched on {m.matchedOn.slice(0, 3).join(", ")}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <div className="flex items-center justify-between mt-6 mb-4">
           <p className="text-sm text-brand-navy/60"><span className="font-bold text-brand-navy">{filtered.length}</span> {filtered.length === 1 ? "opportunity" : "opportunities"}</p>
           {hasFilters && (
@@ -191,21 +207,36 @@ function CareersPage() {
 
         {filtered.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-brand-navy/15 p-12 text-center bg-white">
-            <p className="font-display text-lg font-bold">No matches</p>
-            <p className="text-sm text-brand-navy/60 mt-1">Try clearing some filters.</p>
+            <p className="font-display text-lg font-bold">{tab === "saved" ? "Nothing saved yet" : "No matches"}</p>
+            <p className="text-sm text-brand-navy/60 mt-1">{tab === "saved" ? "Tap the star on any opportunity to keep it here." : "Try clearing some filters."}</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-4 sm:gap-5 pb-24">
-            {filtered.map((o: any) => (
+            {filtered.map((o: any) => {
+              const left = daysLeft(o.deadline);
+              return (
               <article key={o.id} className="bg-white border border-brand-navy/5 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex items-center justify-between mb-3">
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                    o.type === "scholarship" ? "bg-brand-mint/20 text-brand-mint" :
-                    o.type === "internship" ? "bg-brand-orange/20 text-brand-orange" :
+                    o.type === "scholarship" || o.type === "grant" ? "bg-brand-mint/20 text-brand-mint" :
+                    o.type === "internship" || o.type === "hackathon" ? "bg-brand-orange/20 text-brand-orange" :
                     "bg-brand-navy/10 text-brand-navy"
                   }`}>{o.type}</span>
-                  {o.remote && <span className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">● Remote</span>}
+                  <div className="flex items-center gap-2">
+                    {left !== null && left >= 0 && left <= 14 && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">{left}d left</span>
+                    )}
+                    {o.remote && <span className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">● Remote</span>}
+                    {signedIn && (
+                      <button
+                        onClick={() => save.mutate(o.id)}
+                        aria-label={saved.has(o.id) ? "Remove from saved" : "Save opportunity"}
+                        className={`text-sm ${saved.has(o.id) ? "text-brand-orange" : "text-brand-navy/30 hover:text-brand-orange"}`}
+                      >{saved.has(o.id) ? "★" : "☆"}</button>
+                    )}
+                  </div>
                 </div>
+
                 <h3 className="font-display text-lg sm:text-xl font-bold leading-snug mb-1">{o.title}</h3>
                 <p className="text-sm text-brand-navy/60 mb-3">{o.organization}{o.location ? ` · ${o.location}` : ""}</p>
                 <p className="text-sm text-brand-navy/70 line-clamp-2 mb-4">{o.description}</p>
