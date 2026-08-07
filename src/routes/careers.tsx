@@ -1,34 +1,56 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useSuspenseQuery, queryOptions, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { listOpportunities } from "@/lib/api/ecosystem.functions";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  listOpportunityBoard,
+  listMySavedOpportunities,
+  toggleSaveOpportunity,
+  getMatchedOpportunities,
+} from "@/lib/api/opportunities.functions";
 
 const oppsQuery = queryOptions({
-  queryKey: ["opportunities", "all"],
-  queryFn: () => listOpportunities({ data: {} }),
+  queryKey: ["opportunities", "board"],
+  queryFn: () => listOpportunityBoard(),
 });
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
     meta: [
-      { title: "Career Bridge — Pioneer Africa Hub" },
-      { name: "description", content: "Search internships, jobs, and scholarships across Africa — filter by remote, location, and skill tags." },
-      { property: "og:title", content: "Career Bridge — Pioneer Africa Hub" },
+      { title: "Opportunities — internships, hackathons & grants | Pioneer Africa Hub" },
+      { name: "description", content: "Discover internships, graduate roles, scholarships, hackathons, fellowships and grants open to African students — filter by skill, location and deadline." },
+      { property: "og:title", content: "Opportunity board — Pioneer Africa Hub" },
+      { property: "og:description", content: "Internships, hackathons, fellowships, scholarships and grants for African student builders." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://pioneer-africa-hub.lovable.app/careers" },
     ],
+    links: [{ rel: "canonical", href: "https://pioneer-africa-hub.lovable.app/careers" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(oppsQuery),
   component: CareersPage,
 });
 
-type Tab = "all" | "internship" | "job" | "scholarship";
+type Tab = "all" | "saved" | "internship" | "job" | "scholarship" | "hackathon" | "fellowship" | "grant" | "incubator";
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All" },
   { id: "internship", label: "Internships" },
   { id: "job", label: "Jobs" },
+  { id: "hackathon", label: "Hackathons" },
+  { id: "fellowship", label: "Fellowships" },
   { id: "scholarship", label: "Scholarships" },
+  { id: "grant", label: "Grants" },
+  { id: "incubator", label: "Incubators" },
+  { id: "saved", label: "★ Saved" },
 ];
+
+function daysLeft(deadline: string | null) {
+  if (!deadline) return null;
+  return Math.ceil((new Date(deadline).getTime() - Date.now()) / 86_400_000);
+}
+
 
 function CareersPage() {
   const { data: opps } = useSuspenseQuery(oppsQuery);
