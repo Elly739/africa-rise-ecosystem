@@ -1,34 +1,56 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useSuspenseQuery, queryOptions, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { listOpportunities } from "@/lib/api/ecosystem.functions";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  listOpportunityBoard,
+  listMySavedOpportunities,
+  toggleSaveOpportunity,
+  getMatchedOpportunities,
+} from "@/lib/api/opportunities.functions";
 
 const oppsQuery = queryOptions({
-  queryKey: ["opportunities", "all"],
-  queryFn: () => listOpportunities({ data: {} }),
+  queryKey: ["opportunities", "board"],
+  queryFn: () => listOpportunityBoard(),
 });
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
     meta: [
-      { title: "Career Bridge — Pioneer Africa Hub" },
-      { name: "description", content: "Search internships, jobs, and scholarships across Africa — filter by remote, location, and skill tags." },
-      { property: "og:title", content: "Career Bridge — Pioneer Africa Hub" },
+      { title: "Opportunities — internships, hackathons & grants | Pioneer Africa Hub" },
+      { name: "description", content: "Discover internships, graduate roles, scholarships, hackathons, fellowships and grants open to African students — filter by skill, location and deadline." },
+      { property: "og:title", content: "Opportunity board — Pioneer Africa Hub" },
+      { property: "og:description", content: "Internships, hackathons, fellowships, scholarships and grants for African student builders." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://pioneer-africa-hub.lovable.app/careers" },
     ],
+    links: [{ rel: "canonical", href: "https://pioneer-africa-hub.lovable.app/careers" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(oppsQuery),
   component: CareersPage,
 });
 
-type Tab = "all" | "internship" | "job" | "scholarship";
+type Tab = "all" | "saved" | "internship" | "job" | "scholarship" | "hackathon" | "fellowship" | "grant" | "incubator";
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All" },
   { id: "internship", label: "Internships" },
   { id: "job", label: "Jobs" },
+  { id: "hackathon", label: "Hackathons" },
+  { id: "fellowship", label: "Fellowships" },
   { id: "scholarship", label: "Scholarships" },
+  { id: "grant", label: "Grants" },
+  { id: "incubator", label: "Incubators" },
+  { id: "saved", label: "★ Saved" },
 ];
+
+function daysLeft(deadline: string | null) {
+  if (!deadline) return null;
+  return Math.ceil((new Date(deadline).getTime() - Date.now()) / 86_400_000);
+}
+
 
 function CareersPage() {
   const { data: opps } = useSuspenseQuery(oppsQuery);
@@ -37,6 +59,23 @@ function CareersPage() {
   const [location, setLocation] = useState("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
+
+  const qc = useQueryClient();
+  const savedFn = useServerFn(listMySavedOpportunities);
+  const saveFn = useServerFn(toggleSaveOpportunity);
+  const matchFn = useServerFn(getMatchedOpportunities);
+
+  const { data: savedIds } = useQuery({ queryKey: ["saved-opps"], queryFn: () => savedFn(), enabled: signedIn });
+  const { data: matched } = useQuery({ queryKey: ["matched-opps"], queryFn: () => matchFn(), enabled: signedIn });
+  const saved = new Set(savedIds ?? []);
+
+  const save = useMutation({
+    mutationFn: (opportunityId: string) => saveFn({ data: { opportunityId } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved-opps"] }),
+  });
 
   const locations = useMemo(() => {
     const set = new Set<string>();
@@ -51,7 +90,7 @@ function CareersPage() {
   }, [opps]);
 
   const filtered = opps.filter((o: any) => {
-    if (tab !== "all" && o.type !== tab) return false;
+    if (tab === "saved" ? !saved.has(o.id) : tab !== "all" && o.type !== tab) return false;
     if (remoteOnly && !o.remote) return false;
     if (location !== "all" && o.location !== location) return false;
     if (activeTag && !(o.tags ?? []).includes(activeTag)) return false;
@@ -65,6 +104,8 @@ function CareersPage() {
 
   const clearAll = () => { setTab("all"); setQ(""); setLocation("all"); setRemoteOnly(false); setActiveTag(null); };
   const hasFilters = tab !== "all" || q || location !== "all" || remoteOnly || activeTag;
+
+
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-navy">
@@ -141,6 +182,22 @@ function CareersPage() {
           )}
         </div>
 
+        {signedIn && matched && matched.matches.length > 0 && (
+          <section className="mt-8" aria-labelledby="matched-heading">
+            <h2 id="matched-heading" className="font-display text-xl font-bold mb-3">Matched for you</h2>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {matched.matches.slice(0, 3).map((m: any) => (
+                <div key={m.id} className="p-5 rounded-2xl bg-brand-navy text-white">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">{m.type}</p>
+                  <p className="font-display font-bold mt-1 line-clamp-2">{m.title}</p>
+                  <p className="text-xs text-white/60 mt-1">{m.organization}</p>
+                  <p className="text-[10px] mt-2 text-white/50">Matched on {m.matchedOn.slice(0, 3).join(", ")}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <div className="flex items-center justify-between mt-6 mb-4">
           <p className="text-sm text-brand-navy/60"><span className="font-bold text-brand-navy">{filtered.length}</span> {filtered.length === 1 ? "opportunity" : "opportunities"}</p>
           {hasFilters && (
@@ -150,21 +207,36 @@ function CareersPage() {
 
         {filtered.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-brand-navy/15 p-12 text-center bg-white">
-            <p className="font-display text-lg font-bold">No matches</p>
-            <p className="text-sm text-brand-navy/60 mt-1">Try clearing some filters.</p>
+            <p className="font-display text-lg font-bold">{tab === "saved" ? "Nothing saved yet" : "No matches"}</p>
+            <p className="text-sm text-brand-navy/60 mt-1">{tab === "saved" ? "Tap the star on any opportunity to keep it here." : "Try clearing some filters."}</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-4 sm:gap-5 pb-24">
-            {filtered.map((o: any) => (
+            {filtered.map((o: any) => {
+              const left = daysLeft(o.deadline);
+              return (
               <article key={o.id} className="bg-white border border-brand-navy/5 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="flex items-center justify-between mb-3">
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                    o.type === "scholarship" ? "bg-brand-mint/20 text-brand-mint" :
-                    o.type === "internship" ? "bg-brand-orange/20 text-brand-orange" :
+                    o.type === "scholarship" || o.type === "grant" ? "bg-brand-mint/20 text-brand-mint" :
+                    o.type === "internship" || o.type === "hackathon" ? "bg-brand-orange/20 text-brand-orange" :
                     "bg-brand-navy/10 text-brand-navy"
                   }`}>{o.type}</span>
-                  {o.remote && <span className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">● Remote</span>}
+                  <div className="flex items-center gap-2">
+                    {left !== null && left >= 0 && left <= 14 && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">{left}d left</span>
+                    )}
+                    {o.remote && <span className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">● Remote</span>}
+                    {signedIn && (
+                      <button
+                        onClick={() => save.mutate(o.id)}
+                        aria-label={saved.has(o.id) ? "Remove from saved" : "Save opportunity"}
+                        className={`text-sm ${saved.has(o.id) ? "text-brand-orange" : "text-brand-navy/30 hover:text-brand-orange"}`}
+                      >{saved.has(o.id) ? "★" : "☆"}</button>
+                    )}
+                  </div>
                 </div>
+
                 <h3 className="font-display text-lg sm:text-xl font-bold leading-snug mb-1">{o.title}</h3>
                 <p className="text-sm text-brand-navy/60 mb-3">{o.organization}{o.location ? ` · ${o.location}` : ""}</p>
                 <p className="text-sm text-brand-navy/70 line-clamp-2 mb-4">{o.description}</p>
@@ -184,7 +256,9 @@ function CareersPage() {
                   )}
                 </div>
               </article>
-            ))}
+              );
+            })}
+
           </div>
         )}
       </div>

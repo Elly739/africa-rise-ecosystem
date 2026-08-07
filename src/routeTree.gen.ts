@@ -27,7 +27,9 @@ import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$d
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
+import { Route as AuthenticatedTalentRouteImport } from './routes/_authenticated/talent'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
@@ -139,12 +141,22 @@ const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTalentRoute = AuthenticatedTalentRouteImport.update({
+  id: '/talent',
+  path: '/talent',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRequestAccessRoute =
   AuthenticatedRequestAccessRouteImport.update({
     id: '/request-access',
     path: '/request-access',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   id: '/mentor',
   path: '/mentor',
@@ -283,7 +295,9 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
+  '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -323,7 +337,9 @@ export interface FileRoutesByTo {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
+  '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -366,7 +382,9 @@ export interface FileRoutesById {
   '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
+  '/_authenticated/talent': typeof AuthenticatedTalentRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -409,7 +427,9 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/portfolio'
     | '/request-access'
+    | '/talent'
     | '/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -449,7 +469,9 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/portfolio'
     | '/request-access'
+    | '/talent'
     | '/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -491,7 +513,9 @@ export interface FileRouteTypes {
     | '/_authenticated/cv'
     | '/_authenticated/dashboard'
     | '/_authenticated/mentor'
+    | '/_authenticated/portfolio'
     | '/_authenticated/request-access'
+    | '/_authenticated/talent'
     | '/_authenticated/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -663,11 +687,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWelcomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/talent': {
+      id: '/_authenticated/talent'
+      path: '/talent'
+      fullPath: '/talent'
+      preLoaderRoute: typeof AuthenticatedTalentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/request-access': {
       id: '/_authenticated/request-access'
       path: '/request-access'
       fullPath: '/request-access'
       preLoaderRoute: typeof AuthenticatedRequestAccessRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mentor': {
@@ -853,7 +891,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCvRoute: typeof AuthenticatedCvRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
+  AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedRequestAccessRoute: typeof AuthenticatedRequestAccessRoute
+  AuthenticatedTalentRoute: typeof AuthenticatedTalentRoute
   AuthenticatedWelcomeRoute: typeof AuthenticatedWelcomeRoute
   AuthenticatedInviteTokenRoute: typeof AuthenticatedInviteTokenRoute
   AuthenticatedLessonsLessonIdRoute: typeof AuthenticatedLessonsLessonIdRoute
@@ -868,7 +908,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCvRoute: AuthenticatedCvRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
+  AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedRequestAccessRoute: AuthenticatedRequestAccessRoute,
+  AuthenticatedTalentRoute: AuthenticatedTalentRoute,
   AuthenticatedWelcomeRoute: AuthenticatedWelcomeRoute,
   AuthenticatedInviteTokenRoute: AuthenticatedInviteTokenRoute,
   AuthenticatedLessonsLessonIdRoute: AuthenticatedLessonsLessonIdRoute,

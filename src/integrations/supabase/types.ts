@@ -429,6 +429,44 @@ export type Database = {
         }
         Relationships: []
       }
+      collaboration_requests: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          project_id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string
+          project_id: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          project_id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaboration_requests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           cover_url: string | null
@@ -738,12 +776,21 @@ export type Database = {
           country: string | null
           created_at: string
           display_name: string | null
+          github_url: string | null
+          headline: string | null
           id: string
           interests: string[]
+          linkedin_url: string | null
           onboarded_at: string | null
+          open_to: string[]
           primary_goal: string | null
           skill_level: string | null
+          skills: string[]
+          study_year: string | null
+          talent_visible: boolean
+          university: string | null
           updated_at: string
+          website_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -751,12 +798,21 @@ export type Database = {
           country?: string | null
           created_at?: string
           display_name?: string | null
+          github_url?: string | null
+          headline?: string | null
           id: string
           interests?: string[]
+          linkedin_url?: string | null
           onboarded_at?: string | null
+          open_to?: string[]
           primary_goal?: string | null
           skill_level?: string | null
+          skills?: string[]
+          study_year?: string | null
+          talent_visible?: boolean
+          university?: string | null
           updated_at?: string
+          website_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -764,12 +820,21 @@ export type Database = {
           country?: string | null
           created_at?: string
           display_name?: string | null
+          github_url?: string | null
+          headline?: string | null
           id?: string
           interests?: string[]
+          linkedin_url?: string | null
           onboarded_at?: string | null
+          open_to?: string[]
           primary_goal?: string | null
           skill_level?: string | null
+          skills?: string[]
+          study_year?: string | null
+          talent_visible?: boolean
+          university?: string | null
           updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -798,7 +863,9 @@ export type Database = {
           demo_url: string | null
           description: string
           id: string
+          looking_for_collaborators: boolean
           repo_url: string | null
+          roles_needed: string[]
           slug: string
           status: Database["public"]["Enums"]["project_status"]
           summary: string
@@ -813,7 +880,9 @@ export type Database = {
           demo_url?: string | null
           description?: string
           id?: string
+          looking_for_collaborators?: boolean
           repo_url?: string | null
+          roles_needed?: string[]
           slug: string
           status?: Database["public"]["Enums"]["project_status"]
           summary?: string
@@ -828,7 +897,9 @@ export type Database = {
           demo_url?: string | null
           description?: string
           id?: string
+          looking_for_collaborators?: boolean
           repo_url?: string | null
+          roles_needed?: string[]
           slug?: string
           status?: Database["public"]["Enums"]["project_status"]
           summary?: string
@@ -1016,6 +1087,32 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_opportunities: {
+        Row: {
+          created_at: string
+          opportunity_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          opportunity_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          opportunity_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_opportunities_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subjects: {
         Row: {
           color: string | null
@@ -1093,7 +1190,19 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      innovation_scores: {
+        Row: {
+          certificates_count: number | null
+          community_contributions: number | null
+          lessons_completed: number | null
+          likes_received: number | null
+          projects_count: number | null
+          score: number | null
+          submissions_count: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       award_xp: {
@@ -1111,6 +1220,29 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      search_talent: {
+        Args: {
+          _limit?: number
+          _min_score?: number
+          _open_to?: string
+          _q?: string
+          _skill?: string
+        }
+        Returns: {
+          avatar_url: string
+          country: string
+          display_name: string
+          headline: string
+          interests: string[]
+          open_to: string[]
+          projects_count: number
+          score: number
+          skills: string[]
+          study_year: string
+          university: string
+          user_id: string
+        }[]
       }
     }
     Enums: {
@@ -1130,7 +1262,17 @@ export type Database = {
         | "discussion_reply"
         | "application_status"
         | "system"
-      opportunity_type: "internship" | "job" | "scholarship"
+        | "collab_request"
+        | "collab_response"
+        | "talent_message"
+      opportunity_type:
+        | "internship"
+        | "job"
+        | "scholarship"
+        | "hackathon"
+        | "fellowship"
+        | "grant"
+        | "incubator"
       project_status: "idea" | "building" | "launched"
     }
     CompositeTypes: {
@@ -1276,8 +1418,19 @@ export const Constants = {
         "discussion_reply",
         "application_status",
         "system",
+        "collab_request",
+        "collab_response",
+        "talent_message",
       ],
-      opportunity_type: ["internship", "job", "scholarship"],
+      opportunity_type: [
+        "internship",
+        "job",
+        "scholarship",
+        "hackathon",
+        "fellowship",
+        "grant",
+        "incubator",
+      ],
       project_status: ["idea", "building", "launched"],
     },
   },
