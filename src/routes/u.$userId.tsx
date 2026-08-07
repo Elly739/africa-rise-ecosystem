@@ -61,7 +61,14 @@ function ProfilePage() {
   });
 
   if (!data) return null;
-  const { profile, stats, projects, discussions, certificates, followerCount, followingCount } = data;
+  const { profile, stats, innovation, projects, discussions, certificates, followerCount, followingCount } = data;
+  const skills = (profile.skills as string[] | null) ?? [];
+  const openTo = (profile.open_to as string[] | null) ?? [];
+  const links = [
+    { href: profile.github_url, label: "GitHub" },
+    { href: profile.linkedin_url, label: "LinkedIn" },
+    { href: profile.website_url, label: "Website" },
+  ].filter((l) => !!l.href);
 
   return (
     <div className="min-h-dvh bg-brand-bg text-brand-navy">
@@ -75,7 +82,10 @@ function ProfilePage() {
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-display text-3xl sm:text-4xl font-bold">{profile.display_name ?? "Anonymous builder"}</h1>
-            {profile.country && <p className="text-brand-navy/60 mt-1">📍 {profile.country}</p>}
+            {profile.headline && <p className="mt-1 text-lg text-brand-navy/80">{profile.headline}</p>}
+            <p className="text-brand-navy/60 mt-1 text-sm">
+              {[profile.university, profile.study_year, profile.country].filter(Boolean).join(" · ")}
+            </p>
             {profile.bio && <p className="mt-3 text-brand-navy/80">{profile.bio}</p>}
             <div className="flex flex-wrap gap-4 mt-4 text-sm">
               <span><span className="font-bold">{followerCount}</span> <span className="text-brand-navy/60">followers</span></span>
@@ -83,9 +93,22 @@ function ProfilePage() {
               <span><span className="font-bold text-brand-orange">Lv {stats.level}</span> <span className="text-brand-navy/60">· {stats.xp} XP</span></span>
               {stats.streak_days > 0 && <span>🔥 <span className="font-bold">{stats.streak_days}</span> day streak</span>}
             </div>
-            {(profile.interests ?? []).length > 0 && (
+            {links.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-3 text-sm font-bold text-brand-orange">
+                {links.map((l) => (
+                  <a key={l.label} href={l.href as string} target="_blank" rel="noreferrer" className="hover:underline">{l.label} ↗</a>
+                ))}
+              </div>
+            )}
+            {openTo.length > 0 && (
+              <p className="mt-3 text-xs font-bold uppercase tracking-wider text-brand-mint">Open to: {openTo.join(" · ")}</p>
+            )}
+            {(skills.length > 0 || (profile.interests ?? []).length > 0) && (
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {(profile.interests as string[]).map((t) => (
+                {skills.map((t) => (
+                  <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-brand-navy text-white">{t}</span>
+                ))}
+                {((profile.interests as string[] | null) ?? []).map((t) => (
                   <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-brand-clay text-brand-navy/70">{t}</span>
                 ))}
               </div>
@@ -102,13 +125,49 @@ function ProfilePage() {
           )}
         </div>
 
+        {/* Innovation score */}
+        <section className="mb-10 rounded-3xl bg-brand-navy text-white p-6 sm:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">Innovation score</p>
+              <p className="font-display text-5xl font-bold leading-none mt-2">{innovation.score}</p>
+              <p className="text-sm text-white/60 mt-2 max-w-sm">Earned from real activity — shipping projects, entering challenges, finishing courses and helping the community.</p>
+            </div>
+            <dl className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm">
+              {[
+                ["Projects", innovation.projects_count],
+                ["Likes", innovation.likes_received],
+                ["Submissions", innovation.submissions_count],
+                ["Certificates", innovation.certificates_count],
+                ["Lessons", innovation.lessons_completed],
+                ["Community", innovation.community_contributions],
+              ].map(([k, v]) => (
+                <div key={k as string}>
+                  <dt className="text-[10px] uppercase tracking-wider text-white/50">{k}</dt>
+                  <dd className="font-display font-bold text-xl">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          {isSelf && (
+            <Link to="/portfolio" className="inline-flex mt-6 px-5 py-2.5 rounded-full bg-brand-orange text-white text-sm font-bold">
+              Edit your portfolio →
+            </Link>
+          )}
+        </section>
+
         {projects.length > 0 && (
           <section className="mb-10">
             <h2 className="font-display text-xl font-bold mb-4">Projects</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               {projects.map((p) => (
                 <Link key={p.id} to="/innovate/$projectSlug" params={{ projectSlug: p.slug }} className="bg-white border border-brand-navy/5 rounded-2xl p-5 hover:shadow-lg">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">{p.status}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">{p.status}</span>
+                    {p.looking_for_collaborators && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-mint">· Seeking collaborators</span>
+                    )}
+                  </div>
                   <h3 className="font-display font-bold mt-1">{p.title}</h3>
                   <p className="text-sm text-brand-navy/60 line-clamp-2 mt-1">{p.summary}</p>
                 </Link>
@@ -116,6 +175,7 @@ function ProfilePage() {
             </div>
           </section>
         )}
+
 
         {certificates.length > 0 && (
           <section className="mb-10">
