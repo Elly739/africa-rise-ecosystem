@@ -28,6 +28,7 @@ import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvRouteImport } from './routes/_authenticated/cv'
@@ -145,6 +146,11 @@ const AuthenticatedRequestAccessRoute =
     path: '/request-access',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   id: '/mentor',
   path: '/mentor',
@@ -283,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -323,6 +330,7 @@ export interface FileRoutesByTo {
   '/cv': typeof AuthenticatedCvRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -366,6 +374,7 @@ export interface FileRoutesById {
   '/_authenticated/cv': typeof AuthenticatedCvRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -409,6 +418,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/portfolio'
     | '/request-access'
     | '/welcome'
     | '/blog/$slug'
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/cv'
     | '/dashboard'
     | '/mentor'
+    | '/portfolio'
     | '/request-access'
     | '/welcome'
     | '/blog/$slug'
@@ -491,6 +502,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cv'
     | '/_authenticated/dashboard'
     | '/_authenticated/mentor'
+    | '/_authenticated/portfolio'
     | '/_authenticated/request-access'
     | '/_authenticated/welcome'
     | '/blog/$slug'
@@ -668,6 +680,13 @@ declare module '@tanstack/react-router' {
       path: '/request-access'
       fullPath: '/request-access'
       preLoaderRoute: typeof AuthenticatedRequestAccessRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mentor': {
@@ -853,6 +872,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCvRoute: typeof AuthenticatedCvRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
+  AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedRequestAccessRoute: typeof AuthenticatedRequestAccessRoute
   AuthenticatedWelcomeRoute: typeof AuthenticatedWelcomeRoute
   AuthenticatedInviteTokenRoute: typeof AuthenticatedInviteTokenRoute
@@ -868,6 +888,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCvRoute: AuthenticatedCvRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
+  AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedRequestAccessRoute: AuthenticatedRequestAccessRoute,
   AuthenticatedWelcomeRoute: AuthenticatedWelcomeRoute,
   AuthenticatedInviteTokenRoute: AuthenticatedInviteTokenRoute,
