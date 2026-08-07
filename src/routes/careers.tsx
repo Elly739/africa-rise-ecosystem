@@ -256,7 +256,9 @@ function CareersPage() {
                   )}
                 </div>
               </article>
-            ))}
+              );
+            })}
+
           </div>
         )}
       </div>
