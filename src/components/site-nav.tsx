@@ -128,9 +128,14 @@ export function SiteNav() {
                   {isPrivileged && (
                     <Link to="/admin" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold text-brand-orange hover:bg-brand-clay">Admin</Link>
                   )}
+                  <Link to="/portfolio" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My portfolio</Link>
+                  {userRoles?.some((r) => r === "partner" || r === "admin") && (
+                    <Link to="/talent" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Talent directory</Link>
+                  )}
                   <Link to="/cv" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My CV</Link>
                   <Link to="/certificates" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Certificates</Link>
                   <Link to="/applications" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">My Applications</Link>
+
                   <Link to="/request-access" onClick={() => setMenuOpen(false)} className="px-4 py-3 rounded-xl font-semibold hover:bg-brand-clay">Request access</Link>
                 </>
               )}
