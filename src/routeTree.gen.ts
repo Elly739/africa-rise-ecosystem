@@ -27,6 +27,7 @@ import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$d
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
+import { Route as AuthenticatedTalentRouteImport } from './routes/_authenticated/talent'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
 import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
@@ -138,6 +139,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
 const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTalentRoute = AuthenticatedTalentRouteImport.update({
+  id: '/talent',
+  path: '/talent',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRequestAccessRoute =
@@ -291,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/mentor': typeof AuthenticatedMentorRoute
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
+  '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -332,6 +339,7 @@ export interface FileRoutesByTo {
   '/mentor': typeof AuthenticatedMentorRoute
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/request-access': typeof AuthenticatedRequestAccessRoute
+  '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
   '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
+  '/_authenticated/talent': typeof AuthenticatedTalentRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
@@ -420,6 +429,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/portfolio'
     | '/request-access'
+    | '/talent'
     | '/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/portfolio'
     | '/request-access'
+    | '/talent'
     | '/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -504,6 +515,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mentor'
     | '/_authenticated/portfolio'
     | '/_authenticated/request-access'
+    | '/_authenticated/talent'
     | '/_authenticated/welcome'
     | '/blog/$slug'
     | '/challenges/$slug'
@@ -673,6 +685,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof AuthenticatedWelcomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/talent': {
+      id: '/_authenticated/talent'
+      path: '/talent'
+      fullPath: '/talent'
+      preLoaderRoute: typeof AuthenticatedTalentRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/request-access': {
@@ -874,6 +893,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
   AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedRequestAccessRoute: typeof AuthenticatedRequestAccessRoute
+  AuthenticatedTalentRoute: typeof AuthenticatedTalentRoute
   AuthenticatedWelcomeRoute: typeof AuthenticatedWelcomeRoute
   AuthenticatedInviteTokenRoute: typeof AuthenticatedInviteTokenRoute
   AuthenticatedLessonsLessonIdRoute: typeof AuthenticatedLessonsLessonIdRoute
@@ -890,6 +910,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
   AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedRequestAccessRoute: AuthenticatedRequestAccessRoute,
+  AuthenticatedTalentRoute: AuthenticatedTalentRoute,
   AuthenticatedWelcomeRoute: AuthenticatedWelcomeRoute,
   AuthenticatedInviteTokenRoute: AuthenticatedInviteTokenRoute,
   AuthenticatedLessonsLessonIdRoute: AuthenticatedLessonsLessonIdRoute,
