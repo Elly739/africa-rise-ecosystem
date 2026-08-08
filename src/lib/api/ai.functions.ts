@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { buildLearnerContext } from "./ai-context.server";
 
 const SYSTEM_PROMPTS: Record<"mentor" | "advisor", string> = {
   mentor: `You are the Pioneer Africa Hub AI Mentor — a warm, sharp learning coach for African students and young innovators.
@@ -12,6 +13,13 @@ const SYSTEM_PROMPTS: Record<"mentor" | "advisor", string> = {
 - Lean on the African ecosystem (Andela, Flutterwave, Paystack, Twiga, Mastercard Foundation, MTN, etc.) when relevant.
 - Be direct, specific, and example-driven.`,
 };
+
+const GROUNDING_RULES = `You are given a LEARNER PROFILE snapshot from the Pioneer Africa Hub database.
+- Ground every recommendation in that real data: their actual courses, projects, skills and saved opportunities.
+- When suggesting opportunities, only use the LIVE OPPORTUNITIES list provided. Never invent listings, deadlines or organizations.
+- Point to real platform routes (e.g. /careers, /innovate) when a next step lives on the platform.
+- If the snapshot is thin (no projects or courses), say so plainly and give one concrete first step.`;
+
 
 const MessageSchema = z.object({
   role: z.enum(["user", "assistant", "system"]),
@@ -50,12 +58,18 @@ export const chatWithAI = createServerFn({ method: "POST" })
       });
     }
 
+    const grounding = await buildLearnerContext(context.supabase as never, context.userId).catch(() => "");
+
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [{ role: "system", content: SYSTEM_PROMPTS[data.kind] }, ...data.messages],
+        messages: [
+          { role: "system", content: SYSTEM_PROMPTS[data.kind] },
+          ...(grounding ? [{ role: "system" as const, content: `${GROUNDING_RULES}\n\n${grounding}` }] : []),
+          ...data.messages,
+        ],
       }),
     });
 
