@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { buildLearnerContext } from "./ai-context.server";
 
 const SYSTEM_PROMPTS: Record<"mentor" | "advisor", string> = {
   mentor: `You are the Pioneer Africa Hub AI Mentor — a warm, sharp learning coach for African students and young innovators.
