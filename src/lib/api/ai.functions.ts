@@ -14,6 +14,13 @@ const SYSTEM_PROMPTS: Record<"mentor" | "advisor", string> = {
 - Be direct, specific, and example-driven.`,
 };
 
+const GROUNDING_RULES = `You are given a LEARNER PROFILE snapshot from the Pioneer Africa Hub database.
+- Ground every recommendation in that real data: their actual courses, projects, skills and saved opportunities.
+- When suggesting opportunities, only use the LIVE OPPORTUNITIES list provided. Never invent listings, deadlines or organizations.
+- Point to real platform routes (e.g. /careers, /innovate) when a next step lives on the platform.
+- If the snapshot is thin (no projects or courses), say so plainly and give one concrete first step.`;
+
+
 const MessageSchema = z.object({
   role: z.enum(["user", "assistant", "system"]),
   content: z.string().min(1).max(8000),
