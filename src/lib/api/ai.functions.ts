@@ -67,7 +67,7 @@ export const chatWithAI = createServerFn({ method: "POST" })
         model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: SYSTEM_PROMPTS[data.kind] },
-          ...(grounding ? [{ role: "system" as const, content: grounding }] : []),
+          ...(grounding ? [{ role: "system" as const, content: `${GROUNDING_RULES}\n\n${grounding}` }] : []),
           ...data.messages,
         ],
       }),
