@@ -109,6 +109,7 @@ export type Database = {
           id: string
           notes: string | null
           opportunity_id: string
+          project_id: string | null
           status: Database["public"]["Enums"]["application_status"]
           updated_at: string
           user_id: string
@@ -118,6 +119,7 @@ export type Database = {
           id?: string
           notes?: string | null
           opportunity_id: string
+          project_id?: string | null
           status?: Database["public"]["Enums"]["application_status"]
           updated_at?: string
           user_id: string
@@ -127,6 +129,7 @@ export type Database = {
           id?: string
           notes?: string | null
           opportunity_id?: string
+          project_id?: string | null
           status?: Database["public"]["Enums"]["application_status"]
           updated_at?: string
           user_id?: string
@@ -139,10 +142,18 @@ export type Database = {
             referencedRelation: "opportunities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
         ]
       }
       blog_posts: {
         Row: {
+          author_id: string | null
           author_name: string
           body: string
           category: string
@@ -158,6 +169,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          author_id?: string | null
           author_name?: string
           body?: string
           category?: string
@@ -173,6 +185,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          author_id?: string | null
           author_name?: string
           body?: string
           category?: string
