@@ -2,15 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { supabase } from "@/integrations/supabase/client";
+import { listMyProjects } from "@/lib/api/ecosystem.functions";
+import { applyToOpportunity } from "@/lib/api/careers.functions";
 import {
   listOpportunityBoard,
   listMySavedOpportunities,
   toggleSaveOpportunity,
   getMatchedOpportunities,
 } from "@/lib/api/opportunities.functions";
+
 
 const oppsQuery = queryOptions({
   queryKey: ["opportunities", "board"],
