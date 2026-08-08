@@ -64,6 +64,8 @@ function CareersPage() {
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [signedIn, setSignedIn] = useState(false);
+  const [applyFor, setApplyFor] = useState<any | null>(null);
+
 
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
 
