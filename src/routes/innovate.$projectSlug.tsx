@@ -101,6 +101,24 @@ function ProjectPage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
   });
 
+  async function onPickCover(file: File) {
+    if (file.size > 5_000_000) { toast.error("Image must be under 5MB"); return; }
+    setUploading(true);
+    try {
+      const buf = new Uint8Array(await file.arrayBuffer());
+      let bin = "";
+      for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]!);
+      const res = await uploadFn({ data: { fileName: file.name, contentType: file.type, dataBase64: btoa(bin) } });
+      await setCoverFn({ data: { projectId: project!.id, coverUrl: res.url } });
+      toast.success("Cover image added");
+      qc.invalidateQueries({ queryKey: ["project", projectSlug] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   if (!data || !project) return null;
   const { likes, author } = data;
   const rolesNeeded = (project.roles_needed as string[] | null) ?? [];
@@ -110,6 +128,40 @@ function ProjectPage() {
       <SiteNav />
       <div className="px-6 py-12 max-w-3xl mx-auto">
         <Link to="/innovate" className="text-sm text-brand-navy/60 hover:text-brand-navy">← Back to Innovation Hub</Link>
+
+        {isOwner && isNew === "1" && (
+          <section className="mt-6 rounded-3xl bg-brand-navy text-white p-6 sm:p-8">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-brand-mint">You're live</p>
+            <h2 className="font-display text-2xl font-bold mt-2">Your project is published. Here's what happens next.</h2>
+            <ol className="mt-4 space-y-2 text-sm text-white/80 list-decimal list-inside">
+              <li>{project.cover_url ? "Cover image added ✓" : "Add a cover image so your project stands out in the hub."}</li>
+              <li>{project.looking_for_collaborators ? "Open to collaborators ✓" : "Open it to collaborators — builders can ask to join and you approve every request."}</li>
+              <li>Share it on your public profile and attach it when you apply to hackathons or internships.</li>
+            </ol>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link to="/portfolio" className="px-5 py-2.5 rounded-full bg-white text-brand-navy text-sm font-bold">Update my portfolio</Link>
+              <Link to="/careers" className="px-5 py-2.5 rounded-full bg-white/10 text-white text-sm font-bold">Find an opportunity to apply to</Link>
+            </div>
+          </section>
+        )}
+
+        {project.cover_url && (
+          <img src={project.cover_url} alt={`${project.title} cover`} className="mt-6 w-full h-56 sm:h-72 object-cover rounded-3xl" />
+        )}
+
+        {isOwner && (
+          <div className="mt-4 flex items-center gap-3">
+            <input
+              type="file"
+              accept="image/*"
+              aria-label={project.cover_url ? "Replace cover image" : "Add cover image"}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) void onPickCover(f); }}
+              className="text-sm file:mr-3 file:px-4 file:py-2 file:rounded-full file:border-0 file:bg-brand-clay file:font-semibold file:text-brand-navy"
+            />
+            {uploading && <span className="text-xs text-brand-navy/50">Uploading…</span>}
+          </div>
+        )}
+
         <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-brand-navy/60">
           <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-navy/5">{project.status}</span>
           {project.looking_for_collaborators && (
