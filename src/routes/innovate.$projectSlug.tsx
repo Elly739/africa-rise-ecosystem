@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { getProject, toggleProjectLike } from "@/lib/api/ecosystem.functions";
+import { getProject, toggleProjectLike, uploadProjectCover, setProjectCover } from "@/lib/api/ecosystem.functions";
 import { getMyCollabStatus, requestCollaboration, updateProjectCollab } from "@/lib/api/collab.functions";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,6 +15,9 @@ const projectQuery = (slug: string) => queryOptions({
 });
 
 export const Route = createFileRoute("/innovate/$projectSlug")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    new: search['new'] === "1" ? ("1" as const) : undefined,
+  }),
   head: ({ loaderData }) => {
     const p = (loaderData as { project?: { title: string; summary: string } } | undefined)?.project;
     return {
@@ -35,6 +38,7 @@ export const Route = createFileRoute("/innovate/$projectSlug")({
   notFoundComponent: () => <div className="p-10">Project not found.</div>,
   component: ProjectPage,
 });
+
 
 function ProjectPage() {
   const { projectSlug } = Route.useParams();
