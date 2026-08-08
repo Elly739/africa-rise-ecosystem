@@ -51,12 +51,18 @@ export const chatWithAI = createServerFn({ method: "POST" })
       });
     }
 
+    const grounding = await buildLearnerContext(context.supabase as never, context.userId).catch(() => "");
+
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [{ role: "system", content: SYSTEM_PROMPTS[data.kind] }, ...data.messages],
+        messages: [
+          { role: "system", content: SYSTEM_PROMPTS[data.kind] },
+          ...(grounding ? [{ role: "system" as const, content: grounding }] : []),
+          ...data.messages,
+        ],
       }),
     });
 
