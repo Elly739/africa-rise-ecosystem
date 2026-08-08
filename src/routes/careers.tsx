@@ -253,13 +253,22 @@ function CareersPage() {
                     ))}
                   </div>
                 )}
-                <div className="flex items-center justify-between pt-3 border-t border-brand-navy/5">
+                <div className="flex items-center justify-between gap-3 pt-3 border-t border-brand-navy/5">
                   <span className="text-xs text-brand-navy/40">
                     {o.deadline ? `By ${new Date(o.deadline).toLocaleDateString()}` : "Rolling"}
                   </span>
-                  {o.apply_url && (
-                    <a href={o.apply_url} target="_blank" rel="noreferrer" className="text-sm font-bold text-brand-orange hover:underline">Apply →</a>
-                  )}
+                  <div className="flex items-center gap-3">
+                    {signedIn ? (
+                      <button onClick={() => setApplyFor(o)} className="px-4 py-2 rounded-full bg-brand-navy text-white text-xs font-bold">
+                        Apply with a project
+                      </button>
+                    ) : (
+                      <Link to="/auth" search={{ mode: "signup" }} className="text-xs font-bold text-brand-navy/60 hover:text-brand-navy">Sign in to apply</Link>
+                    )}
+                    {o.apply_url && (
+                      <a href={o.apply_url} target="_blank" rel="noreferrer" className="text-sm font-bold text-brand-orange hover:underline">External link →</a>
+                    )}
+                  </div>
                 </div>
               </article>
               );
@@ -269,7 +278,84 @@ function CareersPage() {
         )}
       </div>
 
+      {applyFor && <ApplyModal opportunity={applyFor} onClose={() => setApplyFor(null)} />}
+
       <SiteFooter />
     </div>
   );
+}
+
+function ApplyModal({ opportunity, onClose }: { opportunity: any; onClose: () => void }) {
+  const qc = useQueryClient();
+  const projectsFn = useServerFn(listMyProjects);
+  const applyFn = useServerFn(applyToOpportunity);
+  const { data: projects } = useQuery({ queryKey: ["my-projects"], queryFn: () => projectsFn() });
+  const [projectId, setProjectId] = useState("");
+  const [notes, setNotes] = useState("");
+
+  function pickProject(id: string) {
+    setProjectId(id);
+    const p = (projects ?? []).find((x: any) => x.id === id);
+    if (p) {
+      setNotes(
+        `Project: ${p.title}\n${p.summary}\nStatus: ${p.status}${p.demo_url ? `\nDemo: ${p.demo_url}` : ""}${p.repo_url ? `\nRepo: ${p.repo_url}` : ""}`,
+      );
+    }
+  }
+
+  const m = useMutation({
+    mutationFn: () => applyFn({ data: { opportunityId: opportunity.id, notes, projectId: projectId || null } }),
+    onSuccess: (r: any) => {
+      toast.success(r?.alreadyApplied ? "You already applied to this one" : "Application tracked");
+      qc.invalidateQueries({ queryKey: ["my-applications"] });
+      onClose();
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Could not apply"),
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="bg-brand-bg w-full max-w-lg rounded-3xl p-7 max-h-[90vh] overflow-y-auto">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-brand-orange">{opportunity.type}</p>
+        <h2 className="font-display text-2xl font-bold mt-1">{opportunity.title}</h2>
+        <p className="text-sm text-brand-navy/60">{opportunity.organization}</p>
+
+        <label className="block mt-6">
+          <span className="block text-xs font-bold uppercase tracking-wider text-brand-navy/60 mb-2">Attach a project</span>
+          <select
+            value={projectId}
+            onChange={(e) => pickProject(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border border-brand-navy/10 bg-white text-sm"
+          >
+            <option value="">No project</option>
+            {(projects ?? []).map((p: any) => <option key={p.id} value={p.id}>{p.title}</option>)}
+          </select>
+          {(projects ?? []).length === 0 && (
+            <p className="text-xs text-brand-navy/50 mt-2">
+              No projects yet — <Link to="/innovate" className="font-bold text-brand-orange">publish one</Link> to strengthen applications.
+            </p>
+          )}
+        </label>
+
+        <label className="block mt-4">
+          <span className="block text-xs font-bold uppercase tracking-wider text-brand-navy/60 mb-2">Notes</span>
+          <textarea
+            rows={6}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Why you're a fit, links, and what you'd build."
+            className="w-full px-4 py-3 rounded-xl border border-brand-navy/10 bg-white text-sm"
+          />
+        </label>
+
+        <div className="flex gap-3 pt-5">
+          <button onClick={onClose} className="px-5 py-3 rounded-full font-semibold border border-brand-navy/10">Cancel</button>
+          <button onClick={() => m.mutate()} disabled={m.isPending} className="flex-1 px-5 py-3 bg-brand-orange text-white rounded-full font-bold disabled:opacity-60">
+            {m.isPending ? "Saving…" : "Track this application"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
 }
