@@ -97,7 +97,9 @@ function InnovatePage() {
                     ))}
                   </div>
                 )}
+                </div>
               </Link>
+
             ))}
           </div>
         )}
