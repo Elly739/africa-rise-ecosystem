@@ -138,6 +138,76 @@ function Landing() {
       </header>
 
 
+      {/* Journey band: Learn → Build → Get Discovered */}
+      <section className="relative py-20 px-6 overflow-hidden" aria-labelledby="journey-heading">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="sb-dots absolute top-10 right-[6%] h-24 w-32 text-brand-navy/10" />
+        </div>
+        <div className="relative max-w-7xl mx-auto">
+          <Reveal className="max-w-2xl mb-14">
+            <p className="text-xs font-bold uppercase tracking-widest text-brand-orange mb-3">The Pioneer journey</p>
+            <h2 id="journey-heading" className="font-display text-4xl md:text-5xl font-bold leading-tight">
+              Learn it. <span className="text-brand-orange">Build it.</span> Get discovered.
+            </h2>
+            <p className="text-brand-navy/70 mt-4">
+              Most platforms stop at the certificate. Pioneer carries you all the way to the people hiring, funding and
+              collaborating across Africa.
+            </p>
+          </Reveal>
+
+          <ol className="grid md:grid-cols-3 gap-5 sm:gap-6">
+            {[
+              {
+                step: "01",
+                title: "Learn",
+                desc: "AI, responsible AI and innovation courses built for African context — with quizzes and verifiable certificates.",
+                to: "/courses" as const,
+                cta: "Browse courses",
+                tone: "mint",
+              },
+              {
+                step: "02",
+                title: "Build",
+                desc: "Ship real projects, join hackathon teams and grow a portfolio that shows what you can actually do.",
+                to: "/innovate" as const,
+                cta: "Start building",
+                tone: "orange",
+              },
+              {
+                step: "03",
+                title: "Get discovered",
+                desc: "Your Innovation Score puts you in front of partners scouting talent, plus matched jobs, grants and fellowships.",
+                to: "/careers" as const,
+                cta: "See opportunities",
+                tone: "navy",
+              },
+            ].map((s, i) => (
+              <Reveal as="li" key={s.step} delay={i * 110}>
+                <div className="relative h-full bg-white border border-brand-clay rounded-3xl p-8 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all">
+                  <span
+                    aria-hidden
+                    className={`font-display text-5xl font-bold leading-none ${
+                      s.tone === "mint" ? "text-brand-mint" : s.tone === "orange" ? "text-brand-orange" : "text-brand-navy/25"
+                    }`}
+                  >
+                    {s.step}
+                  </span>
+                  <h3 className="font-display text-2xl font-bold mt-5">{s.title}</h3>
+                  <p className="text-brand-navy/70 text-sm mt-3 leading-relaxed flex-1">{s.desc}</p>
+                  <Link
+                    to={s.to}
+                    className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-brand-navy hover:gap-3 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg rounded"
+                  >
+                    {s.cta} <span aria-hidden>→</span>
+                  </Link>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+
       {/* Learn module */}
       <section className="bg-brand-navy text-white py-24 px-6">
         <div className="max-w-7xl mx-auto">
