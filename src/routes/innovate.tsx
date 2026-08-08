@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { listProjects, createProject } from "@/lib/api/ecosystem.functions";
+import { listProjects, createProject, uploadProjectCover } from "@/lib/api/ecosystem.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -75,14 +75,19 @@ function InnovatePage() {
                 key={p.id}
                 to="/innovate/$projectSlug"
                 params={{ projectSlug: p.slug }}
-                className="bg-white border border-brand-navy/5 rounded-2xl p-6 hover:shadow-lg transition-shadow flex flex-col"
+                className="bg-white border border-brand-navy/5 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow flex flex-col"
               >
+                {p.cover_url && (
+                  <img src={p.cover_url} alt={`${p.title} cover`} loading="lazy" className="h-40 w-full object-cover" />
+                )}
+                <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center justify-between mb-3">
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-navy/5 text-brand-navy/70">
                     {STATUS_LABEL[p.status]}
                   </span>
                   <span className="text-xs text-brand-navy/40">❤ {p.likes}</span>
                 </div>
+
                 <h3 className="font-display text-xl font-bold mb-2">{p.title}</h3>
                 <p className="text-sm text-brand-navy/60 line-clamp-3 flex-1">{p.summary}</p>
                 {p.tags.length > 0 && (
