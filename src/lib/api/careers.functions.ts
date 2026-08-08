@@ -15,7 +15,11 @@ export const listMyApplications = createServerFn({ method: "GET" })
 
 export const applyToOpportunity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ opportunityId: z.string().uuid(), notes: z.string().max(1000).optional() }))
+  .inputValidator(z.object({
+    opportunityId: z.string().uuid(),
+    notes: z.string().max(1000).optional(),
+    projectId: z.string().uuid().optional().nullable(),
+  }))
   .handler(async ({ data, context }) => {
     const { data: existing } = await context.supabase
       .from("applications")
@@ -33,7 +37,9 @@ export const applyToOpportunity = createServerFn({ method: "POST" })
       opportunity_id: data.opportunityId,
       status: "submitted",
       notes: data.notes ?? null,
+      project_id: data.projectId ?? null,
     });
     if (error) throw error;
     return { ok: true, alreadyApplied: false };
   });
+

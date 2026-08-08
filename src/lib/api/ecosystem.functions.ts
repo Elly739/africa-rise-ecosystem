@@ -65,6 +65,55 @@ export const getProject = createServerFn({ method: "GET" })
     return { project, likes: likes?.length ?? 0, author: profile };
   });
 
+export const listMyProjects = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("projects")
+      .select("id,title,slug,summary,status,tags,repo_url,demo_url")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  });
+
+export const uploadProjectCover = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({
+    fileName: z.string().max(200),
+    contentType: z.string().max(80),
+    dataBase64: z.string().max(8_000_000),
+  }))
+  .handler(async ({ data, context }) => {
+    if (!data.contentType.startsWith("image/")) throw new Error("Only image files are allowed");
+    const binary = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
+    if (binary.byteLength > 5_000_000) throw new Error("Image must be under 5MB");
+    const ext = (data.fileName.split(".").pop() ?? "png").toLowerCase().slice(0, 5);
+    const path = `${context.userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await context.supabase.storage
+      .from("project-covers")
+      .upload(path, binary, { contentType: data.contentType, upsert: false });
+    if (error) throw error;
+    const { data: signed, error: signErr } = await context.supabase.storage
+      .from("project-covers")
+      .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+    if (signErr) throw signErr;
+    return { url: signed.signedUrl };
+  });
+
+export const setProjectCover = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ projectId: z.string().uuid(), coverUrl: z.string().url().max(1000) }))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("projects")
+      .update({ cover_url: data.coverUrl })
+      .eq("id", data.projectId)
+      .eq("user_id", context.userId);
+    if (error) throw error;
+    return { ok: true };
+  });
+
 export const createProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({
@@ -75,6 +124,7 @@ export const createProject = createServerFn({ method: "POST" })
     tags: z.array(z.string().max(40)).max(10).default([]),
     repo_url: z.string().url().optional().or(z.literal("")),
     demo_url: z.string().url().optional().or(z.literal("")),
+    cover_url: z.string().url().max(1000).optional().or(z.literal("")),
   }))
   .handler(async ({ data, context }) => {
     const slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80) + "-" + Math.random().toString(36).slice(2, 7);
@@ -88,10 +138,12 @@ export const createProject = createServerFn({ method: "POST" })
       tags: data.tags,
       repo_url: data.repo_url || null,
       demo_url: data.demo_url || null,
+      cover_url: data.cover_url || null,
     }).select("slug").single();
     if (error) throw error;
     return row;
   });
+
 
 export const toggleProjectLike = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
