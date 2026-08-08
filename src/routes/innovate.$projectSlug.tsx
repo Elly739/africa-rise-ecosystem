@@ -42,15 +42,20 @@ export const Route = createFileRoute("/innovate/$projectSlug")({
 
 function ProjectPage() {
   const { projectSlug } = Route.useParams();
+  const { new: isNew } = Route.useSearch();
   const { data } = useSuspenseQuery(projectQuery(projectSlug));
   const qc = useQueryClient();
   const toggle = useServerFn(toggleProjectLike);
   const requestFn = useServerFn(requestCollaboration);
   const statusFn = useServerFn(getMyCollabStatus);
   const collabSettingsFn = useServerFn(updateProjectCollab);
+  const uploadFn = useServerFn(uploadProjectCover);
+  const setCoverFn = useServerFn(setProjectCover);
   const [meId, setMeId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
 
   useEffect(() => { supabase.auth.getUser().then(({ data }) => setMeId(data.user?.id ?? null)); }, []);
 
