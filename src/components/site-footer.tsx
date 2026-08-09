@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import pioneerLogo from "@/assets/pioneer-logo.png.asset.json";
+
 
 export function SiteFooter() {
   return (
@@ -18,7 +20,7 @@ export function SiteFooter() {
         </div>
         <div className="pt-12 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-brand-navy/10">
           <div className="flex items-center gap-2">
-            <div className="size-6 bg-brand-navy rounded flex items-center justify-center text-white font-bold text-xs">S</div>
+            <img src={pioneerLogo.url} alt="Pioneer Africa Hub logo" className="size-7 object-contain" />
             <span className="font-display font-bold text-brand-navy">Pioneer Africa Hub</span>
           </div>
           <div className="text-sm text-brand-navy/40">© {new Date().getFullYear()} Pioneer Africa Hub. All rights reserved.</div>

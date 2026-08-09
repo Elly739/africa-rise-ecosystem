@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { NotificationBell } from "@/components/notification-bell";
 import { getMyStats } from "@/lib/api/stats.functions";
 import type { Database } from "@/integrations/supabase/types";
+import pioneerLogo from "@/assets/pioneer-logo.png.asset.json";
+
 
 const navLinks = [
   { to: "/courses" as const, label: "Learn" },
@@ -57,7 +59,7 @@ export function SiteNav() {
     <nav className="sticky top-0 z-40 bg-brand-bg/85 backdrop-blur-md border-b border-brand-navy/5">
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto gap-3">
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
+          <img src={pioneerLogo.url} alt="Pioneer Africa Hub logo" className="size-9 object-contain" />
           <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub<span className="text-brand-orange">.</span></span>
         </Link>
 

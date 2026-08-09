@@ -1,3 +1,4 @@
+import pioneerLogo from "@/assets/pioneer-logo.png.asset.json";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { z } from "zod";
@@ -76,7 +77,7 @@ function AuthPage() {
     <div className="min-h-screen bg-brand-bg grid lg:grid-cols-2">
       <div className="hidden lg:flex flex-col justify-between bg-brand-navy text-white p-12">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
+          <img src={pioneerLogo.url} alt="Pioneer Africa Hub logo" className="size-9 object-contain" />
           <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub</span>
         </Link>
         <div className="space-y-6 max-w-md">
@@ -92,7 +93,7 @@ function AuthPage() {
         <div className="w-full max-w-md space-y-8">
           <div className="lg:hidden">
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="size-9 bg-brand-orange rounded-xl flex items-center justify-center text-white font-bold">S</div>
+              <img src={pioneerLogo.url} alt="Pioneer Africa Hub logo" className="size-9 object-contain" />
               <span className="font-display text-lg font-bold tracking-tight">Pioneer Africa Hub</span>
             </Link>
           </div>
