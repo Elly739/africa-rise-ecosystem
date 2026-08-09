@@ -15,9 +15,10 @@ const projectQuery = (slug: string) => queryOptions({
 });
 
 export const Route = createFileRoute("/innovate/$projectSlug")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { new?: "1" } => ({
     new: search['new'] === "1" ? ("1" as const) : undefined,
   }),
+
   head: ({ loaderData }) => {
     const p = (loaderData as { project?: { title: string; summary: string } } | undefined)?.project;
     return {
