@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import pioneerLogo from "@/assets/pioneer-logo.png.asset.json";
+
 
 export function SiteFooter() {
   return (
