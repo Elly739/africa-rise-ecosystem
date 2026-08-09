@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { NotificationBell } from "@/components/notification-bell";
 import { getMyStats } from "@/lib/api/stats.functions";
 import type { Database } from "@/integrations/supabase/types";
+import pioneerLogo from "@/assets/pioneer-logo.png.asset.json";
+
 
 const navLinks = [
   { to: "/courses" as const, label: "Learn" },
