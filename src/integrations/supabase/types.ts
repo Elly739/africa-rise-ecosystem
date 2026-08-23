@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       ai_conversations: {
         Row: {
+          context_label: string | null
           created_at: string
           id: string
           kind: Database["public"]["Enums"]["ai_kind"]
@@ -24,6 +25,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          context_label?: string | null
           created_at?: string
           id?: string
           kind: Database["public"]["Enums"]["ai_kind"]
@@ -32,6 +34,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          context_label?: string | null
           created_at?: string
           id?: string
           kind?: Database["public"]["Enums"]["ai_kind"]
@@ -442,6 +445,36 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_memory: {
+        Row: {
+          current_focus: string
+          goals: string
+          last_commitment: string
+          last_session_at: string | null
+          notes: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_focus?: string
+          goals?: string
+          last_commitment?: string
+          last_session_at?: string | null
+          notes?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_focus?: string
+          goals?: string
+          last_commitment?: string
+          last_session_at?: string | null
+          notes?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       collaboration_requests: {
         Row: {
           created_at: string
@@ -637,6 +670,39 @@ export type Database = {
           created_at?: string
           follower_id?: string
           following_id?: string
+        }
+        Relationships: []
+      }
+      learning_tasks: {
+        Row: {
+          created_at: string
+          detail: string
+          done: boolean
+          due_date: string | null
+          id: string
+          source: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string
+          done?: boolean
+          due_date?: string | null
+          id?: string
+          source?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          done?: boolean
+          due_date?: string | null
+          id?: string
+          source?: string
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
