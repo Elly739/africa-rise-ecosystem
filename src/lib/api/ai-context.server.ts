@@ -9,7 +9,8 @@ export async function buildLearnerContext(
   supabase: SupabaseClient<any, any, any>,
   userId: string,
 ): Promise<string> {
-  const [profile, projects, enrollments, certs, saved, opps] = await Promise.all([
+  const [profile, projects, enrollments, certs, saved, opps, progress, attempts, memory, tasks] =
+    await Promise.all([
     supabase
       .from("profiles")
       .select("display_name,headline,university,skills,interests,skill_level,primary_goal,location")
