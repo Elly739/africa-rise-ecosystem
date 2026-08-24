@@ -74,6 +74,49 @@ export async function buildLearnerContext(
   lines.push(`CERTIFICATES EARNED: ${certTitles.join(", ") || "none"}`);
   lines.push(`SAVED OPPORTUNITIES: ${(saved.data ?? []).length}`);
 
+  const progRows = (progress.data ?? []) as Array<any>;
+  lines.push(
+    progRows.length
+      ? `RECENT LESSONS COMPLETED:\n${progRows
+          .map(
+            (r) =>
+              `- ${r.lessons?.title ?? "lesson"}${r.lessons?.courses?.title ? ` (${r.lessons.courses.title})` : ""} on ${String(r.completed_at).slice(0, 10)}`,
+          )
+          .join("\n")}`
+      : "RECENT LESSONS COMPLETED: none yet.",
+  );
+
+  const attemptRows = (attempts.data ?? []) as Array<any>;
+  if (attemptRows.length) {
+    lines.push(
+      `QUIZ RESULTS (weak scores are your best coaching hook — name the quiz and the score):\n${attemptRows
+        .map(
+          (a) =>
+            `- ${a.quizzes?.title ?? "quiz"}: ${a.score}% (${a.passed ? "passed" : "FAILED"}, pass mark ${a.quizzes?.passing_score ?? 70}%) on ${String(a.taken_at).slice(0, 10)}`,
+        )
+        .join("\n")}`,
+    );
+  } else {
+    lines.push("QUIZ RESULTS: no attempts yet.");
+  }
+
+  const taskRows = (tasks.data ?? []) as Array<any>;
+  lines.push(
+    taskRows.length
+      ? `OPEN STUDY TASKS:\n${taskRows.map((t) => `- ${t.title}${t.due_date ? ` (due ${t.due_date})` : ""}`).join("\n")}`
+      : "OPEN STUDY TASKS: none.",
+  );
+
+  const mem = (memory.data ?? null) as Record<string, any> | null;
+  if (mem && (mem.goals || mem.current_focus || mem.last_commitment)) {
+    lines.push(
+      `COACH MEMORY (from previous sessions — continue from here, do not restart):\n- Goals: ${mem.goals || "—"}\n- Current focus: ${mem.current_focus || "—"}\n- Last commitment: ${mem.last_commitment || "—"}\n- Notes: ${mem.notes || "—"}\n- Last session: ${mem.last_session_at ? String(mem.last_session_at).slice(0, 10) : "—"}`,
+    );
+  } else {
+    lines.push("COACH MEMORY: empty — this is effectively a first session, so establish a goal and call the remember tool.");
+  }
+
+
   const oppRows = (opps.data ?? []) as Array<Record<string, any>>;
   if (oppRows.length) {
     lines.push(
