@@ -25,6 +25,25 @@ export async function buildLearnerContext(
       .select("title,organization,type,location,remote,deadline,tags")
       .order("created_at", { ascending: false })
       .limit(12),
+    supabase
+      .from("lesson_progress")
+      .select("completed_at,lessons(title,courses(title))")
+      .eq("user_id", userId)
+      .order("completed_at", { ascending: false })
+      .limit(8),
+    supabase
+      .from("quiz_attempts")
+      .select("score,passed,taken_at,quizzes(title,passing_score)")
+      .eq("user_id", userId)
+      .order("taken_at", { ascending: false })
+      .limit(10),
+    supabase.from("coach_memory").select("*").eq("user_id", userId).maybeSingle(),
+    supabase
+      .from("learning_tasks")
+      .select("title,due_date,done")
+      .eq("user_id", userId)
+      .eq("done", false)
+      .limit(10),
   ]);
 
   const p = (profile.data ?? {}) as Record<string, any>;
