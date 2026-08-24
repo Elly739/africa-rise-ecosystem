@@ -26,6 +26,7 @@ import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as CommunityDiscussionIdRouteImport } from './routes/community.$discussionId'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedTalentRouteImport } from './routes/_authenticated/talent'
 import { Route as AuthenticatedRequestAccessRouteImport } from './routes/_authenticated/request-access'
@@ -135,6 +136,11 @@ const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
@@ -305,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/request-access': typeof AuthenticatedRequestAccessRoute
   '/talent': typeof AuthenticatedTalentRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
+  '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
@@ -394,6 +402,7 @@ export interface FileRoutesById {
   '/_authenticated/request-access': typeof AuthenticatedRequestAccessRoute
   '/_authenticated/talent': typeof AuthenticatedTalentRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
+  '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/community/$discussionId': typeof CommunityDiscussionIdRoute
@@ -440,6 +449,7 @@ export interface FileRouteTypes {
     | '/request-access'
     | '/talent'
     | '/welcome'
+    | '/api/chat'
     | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
@@ -483,6 +493,7 @@ export interface FileRouteTypes {
     | '/request-access'
     | '/talent'
     | '/welcome'
+    | '/api/chat'
     | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
@@ -528,6 +539,7 @@ export interface FileRouteTypes {
     | '/_authenticated/request-access'
     | '/_authenticated/talent'
     | '/_authenticated/welcome'
+    | '/api/chat'
     | '/blog/$slug'
     | '/challenges/$slug'
     | '/community/$discussionId'
@@ -563,6 +575,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiChatRoute: typeof ApiChatRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   UUserIdRoute: typeof UUserIdRoute
@@ -690,6 +703,13 @@ declare module '@tanstack/react-router' {
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/welcome': {
@@ -990,6 +1010,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiChatRoute: ApiChatRoute,
   BlogSlugRoute: BlogSlugRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   UUserIdRoute: UUserIdRoute,
